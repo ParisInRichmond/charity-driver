@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log a Delivery — Charity Driver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .deliver-wrap { max-width: 600px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .deliver-wrap h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .deliver-wrap .sub { color: var(--gray); margin-bottom: 2rem; }
+    .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .resource-item { border: 2px solid rgba(245,166,35,0.15); border-radius: 12px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .resource-item:hover, .resource-item.selected { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+    .resource-item .icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .resource-item .name { font-size: 0.8rem; font-weight: 700; }
+    .success-screen { display: none; text-align: center; padding: 3rem 1.5rem; }
+    .success-screen .big-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .success-screen h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .impact-box { background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25); border-radius: 14px; padding: 1.5rem; margin: 1.5rem 0; }
+    @media(max-width:500px) { .resource-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Charity Driver 🧡</a>
+    <div class="nav-links">
+      <a href="map.html">Map</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="deliver-wrap">
+      <div id="form-screen">
+        <h1>🚗 Log a Delivery</h1>
+        <div class="sub">Tell us about your delivery so we can track its impact on the community.</div>
+
+        <form onsubmit="submitDelivery(event)">
+          <div class="form-group">
+            <label>Delivery Location</label>
+            <select required>
+              <option value="">Select a hotspot...</option>
+              <option>Downtown Oakland (12th St BART)</option>
+              <option>Lake Merritt</option>
+              <option>Fruitvale BART</option>
+              <option>East 12th Street Corridor</option>
+              <option>International Blvd (E. Oakland)</option>
+              <option>West Oakland BART</option>
+              <option>Foothill Blvd (Deep East Oakland)</option>
+              <option>San Antonio Park</option>
+              <option>Coliseum Area</option>
+              <option>Laney College Area</option>
+              <option>Other (add note below)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Resources Delivered (select all that apply)</label>
+            <div class="resource-grid" style="margin-top:0.5rem">
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">🍱</div><div class="name">Food</div></div>
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">💧</div><div class="name">Water</div></div>
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">🧴</div><div class="name">Hygiene Kits</div></div>
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">👕</div><div class="name">Clothing</div></div>
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">🛏️</div><div class="name">Blankets</div></div>
+              <div class="resource-item" onclick="toggleResource(this)"><div class="icon">📋</div><div class="name">Resource Info</div></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Approximate # of People Served</label>
+            <input type="number" min="1" placeholder="e.g. 15" required />
+          </div>
+
+          <div class="form-group">
+            <label>Notes (optional)</label>
+            <textarea rows="3" placeholder="Any observations, needs you noticed, or anything we should know..."></textarea>
+          </div>
+
+          <div class="ai-insight">
+            🤖 <strong>AI Tip:</strong> Based on current data, Downtown Oakland and International Blvd have the highest unmet need right now. Consider those zones if your location is flexible.
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1.5rem">Submit Delivery Report ✓</button>
+        </form>
+      </div>
+
+      <div class="success-screen" id="success-screen">
+        <div class="big-icon">🎉</div>
+        <h2>Delivery Logged!</h2>
+        <p style="color:var(--gray)">Thank you for showing up for Oakland. Your impact has been recorded.</p>
+        <div class="impact-box">
+          <div style="font-size:0.8rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem">🤖 AI Impact Estimate</div>
+          <p style="font-size:0.95rem;line-height:1.6">Based on your delivery, an estimated <strong style="color:var(--gold)" id="impact-num">15–25</strong> people will benefit from resources delivered today. Your data helps us improve future routing and resource predictions.</p>
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+          <a href="deliver.html" class="btn btn-primary">Log Another Delivery</a>
+          <a href="dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleResource(el) { el.classList.toggle('selected'); }
+    function submitDelivery(e) {
+      e.preventDefault();
+      document.getElementById('form-screen').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — Charity Driver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem 3rem; }
+    .auth-box { background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.2); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 480px; }
+    .auth-box h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .auth-box .sub { color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem; }
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .role-card { border: 2px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .role-card:hover, .role-card.selected { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+    .role-card .icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .role-card .title { font-size: 0.8rem; font-weight: 700; }
+    .role-card .desc { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+    .divider { text-align: center; color: var(--gray); font-size: 0.8rem; margin: 1.25rem 0; position: relative; }
+    .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.1); }
+    .divider span { background: var(--navy-mid); padding: 0 1rem; position: relative; }
+    .login-link { text-align: center; font-size: 0.85rem; color: var(--gray); margin-top: 1.25rem; }
+    .login-link a { color: var(--gold); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Charity Driver 🧡</a>
+    <div class="nav-links">
+      <a href="map.html">Map</a>
+      <a href="guest.html">Browse</a>
+      <a href="signup.html" class="nav-btn">Get Started</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="auth-wrap">
+      <div class="auth-box">
+        <h1>Join Charity Driver</h1>
+        <div class="sub">Create your free account and start making an impact in Oakland.</div>
+
+        <div style="margin-bottom:1.25rem">
+          <label style="font-size:0.85rem;font-weight:700;color:var(--light);display:block;margin-bottom:0.75rem">I want to join as a...</label>
+          <div class="role-grid">
+            <div class="role-card selected" onclick="selectRole(this,'free-roam-donor')">
+              <div class="icon">🚗</div>
+              <div class="title">Free-Roam Donor</div>
+              <div class="desc">Deliver supplies on your schedule</div>
+            </div>
+            <div class="role-card" onclick="selectRole(this,'community-partner')">
+              <div class="icon">🤝</div>
+              <div class="title">Community Partner</div>
+              <div class="desc">Org or nonprofit partner</div>
+            </div>
+            <div class="role-card" onclick="selectRole(this,'volunteer')">
+              <div class="icon">💛</div>
+              <div class="title">Volunteer</div>
+              <div class="desc">Help coordinate efforts</div>
+            </div>
+          </div>
+        </div>
+
+        <form onsubmit="handleSignup(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+            <div class="form-group"><label>First Name</label><input type="text" placeholder="Paris" required /></div>
+            <div class="form-group"><label>Last Name</label><input type="text" placeholder="Irving" required /></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="paris@example.com" required /></div>
+          <div class="form-group"><label>Password</label><input type="password" placeholder="Create a password" required /></div>
+          <div class="form-group"><label>City</label><input type="text" placeholder="Oakland, CA" value="Oakland, CA" /></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Create My Account →</button>
+        </form>
+
+        <div class="divider"><span>or</span></div>
+        <a href="guest.html" class="btn btn-outline" style="width:100%;text-align:center;display:block">Continue as Guest</a>
+        <div class="login-link">Already have an account? <a href="#">Log in</a></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedRole = 'free-roam-donor';
+    function selectRole(el, role) {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedRole = role;
+    }
+    function handleSignup(e) {
+      e.preventDefault();
+      localStorage.setItem('cd_user', JSON.stringify({ role: selectedRole, loggedIn: true }));
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>
