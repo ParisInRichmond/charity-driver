@@ -24,10 +24,11 @@
     .zone-item:last-child { border: none; }
     .zone-name { font-size: 0.9rem; font-weight: 600; }
     .zone-need { font-size: 0.75rem; color: var(--gray); }
-    .urgency { width: 10px; height: 10px; border-radius: 50%; }
+    .urgency { width: 10px; height: 10px; border-radius: 50%; flex-shrink:0; }
     .urgency.high { background: #ef4444; }
     .urgency.med { background: #f59e0b; }
     .urgency.low { background: #34d399; }
+    .empty-state { text-align:center; padding: 2rem; color: var(--gray); font-size:0.85rem; }
     @media(max-width:768px) { .grid2 { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -37,7 +38,7 @@
     <div class="nav-links">
       <a href="map.html">Map</a>
       <a href="deliver.html">Deliver</a>
-      <a href="#" onclick="logout()">Log Out</a>
+      <a href="#" id="logout-btn">Log Out</a>
     </div>
   </nav>
 
@@ -45,15 +46,15 @@
     <div class="container dash">
       <div class="dash-header">
         <div>
-          <h1>Welcome back, Donor 👋</h1>
+          <h1 id="welcome-msg">Welcome back 👋</h1>
           <p style="color:var(--gray);font-size:0.9rem">Here's what's happening across Oakland right now.</p>
         </div>
         <a href="deliver.html" class="btn btn-primary">🚗 Start a Delivery</a>
       </div>
 
       <div class="metrics">
-        <div class="metric card"><div class="val">3</div><div class="lbl">Your deliveries</div></div>
-        <div class="metric card"><div class="val">~180</div><div class="lbl">People impacted</div></div>
+        <div class="metric card"><div class="val" id="delivery-count">—</div><div class="lbl">Your deliveries</div></div>
+        <div class="metric card"><div class="val" id="people-count">—</div><div class="lbl">People impacted</div></div>
         <div class="metric card"><div class="val" id="ai-zone">—</div><div class="lbl">🤖 AI Recommended Zone</div></div>
         <div class="metric card"><div class="val">10</div><div class="lbl">Active hotspots</div></div>
       </div>
@@ -61,52 +62,18 @@
       <div class="grid2">
         <div class="card">
           <div class="section-label">📍 High-Need Zones Right Now</div>
-          <div class="zone-item">
-            <div><div class="zone-name">Downtown Oakland (12th St BART)</div><div class="zone-need">Blankets, Food, Shelter Info</div></div>
-            <div class="urgency high" title="High urgency"></div>
-          </div>
-          <div class="zone-item">
-            <div><div class="zone-name">International Blvd (E. Oakland)</div><div class="zone-need">Food, Water, Clothing</div></div>
-            <div class="urgency high" title="High urgency"></div>
-          </div>
-          <div class="zone-item">
-            <div><div class="zone-name">Fruitvale BART</div><div class="zone-need">Hygiene Kits, Water</div></div>
-            <div class="urgency med" title="Medium urgency"></div>
-          </div>
-          <div class="zone-item">
-            <div><div class="zone-name">Lake Merritt</div><div class="zone-need">Food, Clothing</div></div>
-            <div class="urgency med" title="Medium urgency"></div>
-          </div>
-          <div class="zone-item">
-            <div><div class="zone-name">San Antonio Park</div><div class="zone-need">Hygiene, Blankets</div></div>
-            <div class="urgency low" title="Lower urgency"></div>
-          </div>
-          <div style="margin-top:1rem">
-            <a href="map.html" class="btn btn-outline btn-sm">View Full Map →</a>
-          </div>
+          <div class="zone-item"><div><div class="zone-name">Downtown Oakland (12th St BART)</div><div class="zone-need">Blankets, Food, Shelter Info</div></div><div class="urgency high"></div></div>
+          <div class="zone-item"><div><div class="zone-name">International Blvd (E. Oakland)</div><div class="zone-need">Food, Water, Clothing</div></div><div class="urgency high"></div></div>
+          <div class="zone-item"><div><div class="zone-name">Fruitvale BART</div><div class="zone-need">Hygiene Kits, Water</div></div><div class="urgency med"></div></div>
+          <div class="zone-item"><div><div class="zone-name">Lake Merritt</div><div class="zone-need">Food, Clothing</div></div><div class="urgency med"></div></div>
+          <div class="zone-item"><div><div class="zone-name">San Antonio Park</div><div class="zone-need">Hygiene, Blankets</div></div><div class="urgency low"></div></div>
+          <div style="margin-top:1rem"><a href="map.html" class="btn btn-outline btn-sm">View Full Map →</a></div>
         </div>
 
         <div class="card">
-          <div class="section-label">🕐 Recent Activity</div>
-          <div class="activity-item">
-            <div class="activity-icon">✅</div>
-            <div class="activity-text">Delivery completed at Lake Merritt — Food + Water<div class="time">2 days ago</div></div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon">✅</div>
-            <div class="activity-text">Delivery completed at Fruitvale BART — Hygiene kits + Clothing<div class="time">5 days ago</div></div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon">✅</div>
-            <div class="activity-text">Delivery completed at Downtown Oakland — Blankets + Food<div class="time">1 week ago</div></div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon">🤖</div>
-            <div class="activity-text">AI updated zone priority rankings for April<div class="time">Today</div></div>
-          </div>
-          <div style="margin-top:1rem">
-            <a href="deliver.html" class="btn btn-primary btn-sm">Log New Delivery →</a>
-          </div>
+          <div class="section-label">🕐 Your Recent Deliveries</div>
+          <div id="activity-list"><div class="empty-state">No deliveries yet.<br/>Make your first one today! 🚗</div></div>
+          <div style="margin-top:1rem"><a href="deliver.html" class="btn btn-primary btn-sm">Log New Delivery →</a></div>
         </div>
       </div>
 
@@ -122,21 +89,63 @@
     </div>
   </div>
 
-  <script>
-    const hour = new Date().getHours();
-    let zone, detail;
-    if (hour >= 6 && hour < 11) {
-      zone = "Downtown Oakland"; detail = "Morning window — highest foot traffic 7–9am. Food + water most needed right now.";
-    } else if (hour >= 11 && hour < 16) {
-      zone = "Fruitvale BART"; detail = "Afternoon window — hygiene kits and clothing in high demand. Bilingual donors especially helpful.";
-    } else {
-      zone = "Lake Merritt"; detail = "Evening window — blankets and warm food critical tonight. Temperature dropping below 55°F.";
-    }
-    document.getElementById('ai-zone').textContent = zone;
-    document.getElementById('ai-headline').textContent = `🎯 Recommended: Head to ${zone}`;
-    document.getElementById('ai-detail').textContent = detail;
+  <script type="module">
+    import { supabase, requireAuth } from './supabase.js'
 
-    function logout() { localStorage.removeItem('cd_user'); window.location.href = 'index.html'; }
+    const user = await requireAuth()
+
+    // Welcome message
+    const name = user.user_metadata?.first_name || user.email.split('@')[0]
+    document.getElementById('welcome-msg').textContent = `Welcome back, ${name} 👋`
+
+    // AI zone recommendation
+    const hour = new Date().getHours()
+    let zone, detail
+    if (hour >= 6 && hour < 11) {
+      zone = "Downtown Oakland"; detail = "Morning window — highest foot traffic 7–9am. Food + water most needed right now."
+    } else if (hour >= 11 && hour < 16) {
+      zone = "Fruitvale BART"; detail = "Afternoon window — hygiene kits and clothing in high demand. Bilingual donors especially helpful."
+    } else {
+      zone = "Lake Merritt"; detail = "Evening window — blankets and warm food critical tonight. Temperature dropping below 55°F."
+    }
+    document.getElementById('ai-zone').textContent = zone
+    document.getElementById('ai-headline').textContent = `🎯 Recommended: Head to ${zone}`
+    document.getElementById('ai-detail').textContent = detail
+
+    // Load user's deliveries from Supabase
+    const { data: deliveries, error } = await supabase
+      .from('deliveries')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5)
+
+    if (deliveries && deliveries.length > 0) {
+      document.getElementById('delivery-count').textContent = deliveries.length
+      const totalPeople = deliveries.reduce((sum, d) => sum + (d.people_served || 0), 0)
+      document.getElementById('people-count').textContent = `~${totalPeople}`
+
+      const list = document.getElementById('activity-list')
+      list.innerHTML = deliveries.map(d => `
+        <div class="activity-item">
+          <div class="activity-icon">✅</div>
+          <div class="activity-text">
+            Delivery at <strong>${d.location}</strong> — ${d.resources ? d.resources.join(', ') : 'Supplies'}
+            <div class="time">${new Date(d.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+          </div>
+        </div>
+      `).join('')
+    } else {
+      document.getElementById('delivery-count').textContent = '0'
+      document.getElementById('people-count').textContent = '0'
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
   </script>
 </body>
 </html>

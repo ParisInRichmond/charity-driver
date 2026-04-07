@@ -3,117 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Charity Driver — Connecting Donors to Oakland</title>
+  <title>Charity Driver — Show Up for Oakland</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
     .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 64px; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 50%, rgba(245,166,35,0.08) 0%, transparent 70%); }
-    .hero-content { max-width: 650px; position: relative; z-index: 1; }
-    .hero-eyebrow { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .hero-eyebrow span { font-size: 0.8rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
-    .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
-    .hero h1 em { font-style: normal; color: var(--gold); }
-    .hero p { font-size: 1.15rem; color: var(--gray); line-height: 1.7; margin-bottom: 2.5rem; max-width: 540px; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 55% 50%, rgba(245,166,35,0.07) 0%, transparent 65%); }
+    .hero-content { max-width: 620px; position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 0.78rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 1.5rem; }
+    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero p { font-size: 1.1rem; color: var(--gray); line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px; }
     .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 5rem; }
     .stat-card { text-align: center; }
-    .stat-card .number { font-size: 2.5rem; font-weight: 800; color: var(--gold); }
-    .stat-card .label { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
-    .how-it-works { background: var(--navy-mid); }
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
-    .step { text-align: center; padding: 2rem 1.5rem; }
-    .step-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(245,166,35,0.1); border: 2px solid rgba(245,166,35,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.75rem; }
-    .step h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step p { font-size: 0.875rem; color: var(--gray); line-height: 1.6; }
-    .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; }
-    .section-sub { color: var(--gray); font-size: 1rem; max-width: 480px; }
-    footer { background: var(--navy-mid); border-top: 1px solid rgba(245,166,35,0.1); padding: 2rem; text-align: center; color: var(--gray); font-size: 0.85rem; }
+    .stat-card .number { font-family: 'Lora', serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); }
+    .stat-card .label { font-size: 0.82rem; color: var(--gray); margin-top: 0.3rem; line-height: 1.5; }
+    .values { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .value-card { padding: 2rem 1.5rem; text-align: center; }
+    .value-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .value-card h3 { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .value-card p { font-size: 0.875rem; color: var(--gray); line-height: 1.7; }
+    .mission-section { background: var(--navy-mid); }
+    .mission-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .mission-inner blockquote { font-family: 'Lora', serif; font-size: 1.5rem; font-style: italic; line-height: 1.7; color: var(--light); margin: 1.5rem 0; }
+    .mission-inner blockquote em { color: var(--gold); font-style: normal; }
+    .cta-section { text-align: center; }
     @media(max-width:600px) { .stats { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
   <nav>
-    <a href="index.html" class="nav-logo">Charity Driver 🧡</a>
+    <a href="index.html" class="nav-logo">
+      <img src="logo.svg" alt="Charity Driver logo" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
     <div class="nav-links">
       <a href="map.html">Map</a>
       <a href="guest.html">Browse</a>
-      <a href="signup.html" class="nav-btn">Get Started</a>
+      <a href="login.html">Log In</a>
+      <a href="signup.html" class="nav-btn">Join Us</a>
     </div>
   </nav>
 
   <div class="page">
+    <!-- HERO -->
     <section class="hero">
       <div class="container">
         <div class="hero-content">
-          <div class="hero-eyebrow">
-            <span>🤖 AI-Powered Community Aid</span>
-          </div>
-          <h1>Meet people where<br/>they are. <em>Right now.</em></h1>
-          <p>Charity Driver connects free-roam donors with unhoused individuals across Oakland — using AI to identify the highest-need areas in real time so your impact lands where it matters most.</p>
+          <div class="hero-eyebrow">Oakland, California</div>
+          <h1>Show up.<br/>Give freely.<br/><em>Change someone's day.</em></h1>
+          <p>Charity Driver connects everyday people to those who need them most — on the streets of Oakland. No app required. No reward needed. Just the will to show up.</p>
           <div class="hero-ctas">
-            <a href="signup.html" class="btn btn-primary">Become a Donor</a>
-            <a href="guest.html" class="btn btn-outline">View the Map</a>
+            <a href="signup.html" class="btn btn-primary">Start Giving →</a>
+            <a href="guest.html" class="btn btn-outline">See Who Needs Help</a>
           </div>
         </div>
 
         <div class="stats">
           <div class="stat-card card">
             <div class="number">4,800+</div>
-            <div class="label">Unhoused individuals in Oakland</div>
+            <div class="label">Unhoused neighbors in Oakland</div>
           </div>
           <div class="stat-card card">
-            <div class="number">10+</div>
-            <div class="label">High-need zones mapped</div>
+            <div class="number">10</div>
+            <div class="label">High-need areas mapped across the city</div>
           </div>
           <div class="stat-card card">
             <div class="number">Free</div>
-            <div class="label">Always free to donors</div>
+            <div class="label">Always free. Always open. No barriers.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section how-it-works">
+    <!-- MISSION -->
+    <section class="section mission-section">
       <div class="container">
-        <div class="section-title">How It Works</div>
-        <div class="section-sub">Three steps. Real impact. Zero barriers.</div>
-        <div class="steps">
-          <div class="step card">
-            <div class="step-icon">📍</div>
-            <h3>See the Need</h3>
-            <p>Browse our AI-powered map showing real-time hotspots and what resources are most needed in each area.</p>
+        <div class="mission-inner">
+          <div class="hero-eyebrow" style="text-align:center">Why We Exist</div>
+          <blockquote>"We don't do this because we have to.<br/>We do this because <em>we want to.</em>"</blockquote>
+          <p style="color:var(--gray);font-size:0.95rem;line-height:1.8">Charity Driver was born in Oakland — a city full of brilliance, resilience, and real need. We believe that ordinary people, choosing to show up with a meal or a blanket, can do what systems can't: make someone feel seen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title" style="text-align:center">What drives us</div>
+        <div class="values">
+          <div class="value-card card">
+            <div class="value-icon">❤️</div>
+            <h3>Compassion</h3>
+            <p>Every person on these streets has a name, a story, and dignity. We start from that truth.</p>
           </div>
-          <div class="step card">
-            <div class="step-icon">🚗</div>
-            <h3>Drive & Deliver</h3>
-            <p>Pick a zone, load up on supplies, and head out. You choose when, where, and what you bring.</p>
+          <div class="value-card card">
+            <div class="value-icon">🙌</div>
+            <h3>Service</h3>
+            <p>Not a transaction. Not a PR moment. Just showing up with what someone needs, because you can.</p>
           </div>
-          <div class="step card">
-            <div class="step-icon">✅</div>
-            <h3>Log Your Impact</h3>
-            <p>Submit a quick delivery report. Your contribution is tracked and adds to Oakland's community data.</p>
+          <div class="value-card card">
+            <div class="value-icon">🛤️</div>
+            <h3>Movement</h3>
+            <p>One donor, one delivery, one block at a time — that's how neighborhoods change.</p>
           </div>
-          <div class="step card">
-            <div class="step-icon">🤖</div>
-            <h3>AI Learns & Improves</h3>
-            <p>Every delivery improves our model — better predictions, smarter routing, deeper community impact over time.</p>
+          <div class="value-card card">
+            <div class="value-icon">🔥</div>
+            <h3>Devotion</h3>
+            <p>We're not seasonal. We don't stop when it's inconvenient. Oakland needs people who stay committed.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container" style="text-align:center;">
-        <div class="section-title">Ready to make a difference?</div>
-        <p style="color:var(--gray);margin:1rem auto 2rem;max-width:440px;">Join a network of free-roam donors turning compassion into action across Oakland, CA.</p>
-        <a href="signup.html" class="btn btn-primary">Sign Up — It's Free</a>
+    <!-- HOW IT WORKS -->
+    <section class="section mission-section">
+      <div class="container">
+        <div class="section-title" style="text-align:center">How it works</div>
+        <div class="section-sub" style="text-align:center;margin:0.75rem auto 3rem">Three steps. Real impact. No red tape.</div>
+        <div class="values">
+          <div class="value-card card">
+            <div class="value-icon">📍</div>
+            <h3>See the need</h3>
+            <p>Browse our map showing where Oakland's unhoused community is concentrated and what's most needed right now.</p>
+          </div>
+          <div class="value-card card">
+            <div class="value-icon">🚗</div>
+            <h3>Drive & deliver</h3>
+            <p>Pick a zone. Load up on food, water, hygiene supplies, or blankets. Go when you can. Give what you have.</p>
+          </div>
+          <div class="value-card card">
+            <div class="value-icon">✅</div>
+            <h3>Log your impact</h3>
+            <p>Submit a quick delivery report. That location updates in real time so others know where help just arrived.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+      <div class="container">
+        <div class="section-title">Ready to show up?</div>
+        <p style="color:var(--gray);margin:1rem auto 2.5rem;max-width:460px;line-height:1.8">You don't need a reason beyond this: someone out there needs what you have to give. That's enough.</p>
+        <a href="signup.html" class="btn btn-primary" style="font-size:1.05rem">Join Charity Driver — It's Free</a>
         &nbsp;&nbsp;
-        <a href="guest.html" class="btn btn-outline">Explore as Guest</a>
+        <a href="guest.html" class="btn btn-outline" style="font-size:1.05rem">Explore the Map</a>
       </div>
     </section>
 
     <footer>
-      <strong style="color:var(--gold)">Charity Driver</strong> &nbsp;·&nbsp; Built for Oakland &nbsp;·&nbsp; Powered by AI &nbsp;·&nbsp; Founded by Paris Irving
+      <img src="logo.svg" alt="Charity Driver" style="height:28px;margin-bottom:0.75rem;opacity:0.8"><br/>
+      Built with purpose in Oakland, CA &nbsp;·&nbsp; Founded by <strong style="color:var(--gold)">Paris Irving</strong><br/>
+      <span style="font-size:0.78rem;opacity:0.6;margin-top:0.5rem;display:block">Give freely. Show up always. Love without limits.</span>
     </footer>
   </div>
 </body>
