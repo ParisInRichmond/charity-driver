@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Profile — Charity Driver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .create-wrap { max-width: 620px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .create-wrap h1 { font-family: 'Lora', serif; font-size: 1.9rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .create-wrap .sub { color: var(--gray); margin-bottom: 2rem; line-height: 1.7; font-size: 0.92rem; }
+    .consent-box { background: rgba(245,166,35,0.05); border: 1px solid rgba(245,166,35,0.25); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--light); line-height: 1.7; }
+    .consent-box strong { color: var(--gold); }
+    .resource-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.65rem; }
+    .resource-item { border: 2px solid rgba(245,166,35,0.15); border-radius: 10px; padding: 0.85rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .resource-item:hover, .resource-item.selected { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+    .resource-item .icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .resource-item .name { font-size: 0.75rem; font-weight: 700; }
+    .emoji-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .emoji-opt { font-size: 1.6rem; cursor: pointer; padding: 0.3rem; border-radius: 8px; border: 2px solid transparent; transition: all 0.15s; }
+    .emoji-opt.selected { border-color: var(--gold); background: rgba(245,166,35,0.1); }
+    @media(max-width:480px) { .resource-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="logo.svg" alt="Charity Driver" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="profiles-directory.html">← Back to People</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="create-wrap">
+      <h1>Add a Profile 🧡</h1>
+      <div class="sub">You met someone in the field. Now help others know how to serve them too. Use only what they've shared — their dignity comes first.</div>
+
+      <div class="consent-box">
+        <strong>⚠️ Privacy reminder:</strong> Only add profiles for individuals who have given verbal consent, or through a verified partner organization. Use a first name or alias only — never a full legal name. Keep descriptions respectful and general.
+      </div>
+
+      <div id="error-msg" class="error-msg"></div>
+
+      <form id="create-form">
+        <!-- Avatar emoji -->
+        <div class="form-group">
+          <label>Choose a profile icon</label>
+          <div class="emoji-grid" id="emoji-grid">
+            <span class="emoji-opt selected" onclick="selectEmoji(this,'👤')">👤</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'👩')">👩</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'🧑')">🧑</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'👴')">👴</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'👵')">👵</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'🧔')">🧔</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'👦')">👦</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'🌟')">🌟</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>First name or alias *</label>
+          <input type="text" id="display-name" placeholder="e.g. Marcus, or 'the man with the red cap'" required />
+        </div>
+
+        <div class="form-group">
+          <label>Zone / Area *</label>
+          <select id="zone" required>
+            <option value="">Select area...</option>
+            <option>Downtown Oakland (12th St BART)</option>
+            <option>Lake Merritt</option>
+            <option>Fruitvale BART</option>
+            <option>East 12th Street Corridor</option>
+            <option>International Blvd (E. Oakland)</option>
+            <option>West Oakland BART</option>
+            <option>Foothill Blvd (Deep East Oakland)</option>
+            <option>San Antonio Park</option>
+            <option>Coliseum Area</option>
+            <option>Laney College Area</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>General description</label>
+          <textarea id="description" rows="3" placeholder="Brief, respectful description. e.g. 'Older gentleman, usually near the benches. Quiet but appreciative. Has a dog named Bear.'"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Current needs (select all that apply)</label>
+          <div class="resource-grid" style="margin-top:0.5rem">
+            <div class="resource-item" onclick="toggleNeed(this,'Food')"><div class="icon">🍱</div><div class="name">Food</div></div>
+            <div class="resource-item" onclick="toggleNeed(this,'Water')"><div class="icon">💧</div><div class="name">Water</div></div>
+            <div class="resource-item" onclick="toggleNeed(this,'Hygiene')"><div class="icon">🧴</div><div class="name">Hygiene</div></div>
+            <div class="resource-item" onclick="toggleNeed(this,'Clothing')"><div class="icon">👕</div><div class="name">Clothing</div></div>
+            <div class="resource-item" onclick="toggleNeed(this,'Blankets')"><div class="icon">🛏️</div><div class="name">Blankets</div></div>
+            <div class="resource-item" onclick="toggleNeed(this,'Medical Support')"><div class="icon">🏥</div><div class="name">Medical Support</div></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Notes from this interaction</label>
+          <textarea id="notes" rows="3" placeholder="What did you learn? What should the next person know? Be helpful, be kind."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Last helped (today?)</label>
+          <input type="date" id="last-helped" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%;margin-top:0.5rem">Save Profile 🧡</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase, requireAuth } from './supabase.js'
+
+    const user = await requireAuth()
+    let selectedEmoji = '👤'
+    let selectedNeeds = []
+
+    // Set today's date as default
+    document.getElementById('last-helped').valueAsDate = new Date()
+
+    window.selectEmoji = function(el, emoji) {
+      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'))
+      el.classList.add('selected')
+      selectedEmoji = emoji
+    }
+
+    window.toggleNeed = function(el, need) {
+      el.classList.toggle('selected')
+      if (selectedNeeds.includes(need)) selectedNeeds = selectedNeeds.filter(n => n !== need)
+      else selectedNeeds.push(need)
+    }
+
+    document.getElementById('create-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = document.getElementById('submit-btn')
+      const errorEl = document.getElementById('error-msg')
+      errorEl.style.display = 'none'
+      btn.textContent = 'Saving...'
+      btn.style.opacity = '0.7'
+      btn.style.pointerEvents = 'none'
+
+      const lastHelped = document.getElementById('last-helped').value
+
+      const { error } = await supabase.from('individual_profiles').insert({
+        created_by: user.id,
+        avatar_emoji: selectedEmoji,
+        display_name: document.getElementById('display-name').value.trim(),
+        zone: document.getElementById('zone').value,
+        description: document.getElementById('description').value.trim(),
+        needs: selectedNeeds,
+        notes: document.getElementById('notes').value.trim(),
+        last_helped_at: lastHelped ? new Date(lastHelped).toISOString() : null
+      })
+
+      if (error) {
+        errorEl.textContent = error.message
+        errorEl.style.display = 'block'
+        btn.textContent = 'Save Profile 🧡'
+        btn.style.opacity = '1'
+        btn.style.pointerEvents = 'auto'
+        return
+      }
+
+      window.location.href = 'profiles-directory.html'
+    })
+  </script>
+</body>
+</html>

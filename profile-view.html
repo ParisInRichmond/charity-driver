@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Charity Driver</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .profile-wrap { max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--gray); font-size: 0.85rem; text-decoration: none; margin-bottom: 2rem; transition: color 0.2s; }
+    .back-link:hover { color: var(--gold); }
+    .profile-hero { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .profile-avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,rgba(245,166,35,0.3),rgba(245,166,35,0.08)); border: 2px solid rgba(245,166,35,0.35); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; flex-shrink: 0; }
+    .profile-hero-info h1 { font-family: 'Lora', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .profile-zone-tag { font-size: 0.82rem; color: var(--gold); margin-bottom: 0.5rem; }
+    .profile-desc { color: var(--gray); font-size: 0.92rem; line-height: 1.7; }
+    .section-block { margin-bottom: 1.75rem; }
+    .block-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 0.85rem; }
+    .needs-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .need-chip { font-size: 0.8rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px; background: rgba(245,166,35,0.1); color: var(--gold); border: 1px solid rgba(245,166,35,0.25); }
+    /* HISTORY */
+    .history-item { display: flex; gap: 0.85rem; align-items: flex-start; padding: 0.85rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .history-item:last-child { border: none; }
+    .history-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(245,166,35,0.1); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .history-text { font-size: 0.85rem; line-height: 1.5; }
+    .history-time { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+    /* ADD NOTE */
+    .add-note-form { background: var(--navy); border: 1px solid rgba(245,166,35,0.15); border-radius: 12px; padding: 1.25rem; margin-top: 1rem; }
+    .urgency-banner { border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem; font-size: 0.88rem; }
+    .urgency-banner.urgent { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); }
+    .urgency-banner.moderate { background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.25); }
+    .urgency-banner.recent { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="logo.svg" alt="Charity Driver" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="profiles-directory.html">← People We Serve</a>
+      <a href="#" id="logout-btn">Log Out</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="profile-wrap">
+      <a href="profiles-directory.html" class="back-link">← Back to directory</a>
+      <div id="profile-content">
+        <div style="text-align:center;padding:4rem;color:var(--gray)">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase, requireAuth } from './supabase.js'
+
+    const user = await requireAuth()
+    const params = new URLSearchParams(window.location.search)
+    const profileId = params.get('id')
+
+    if (!profileId) window.location.href = 'profiles-directory.html'
+
+    function timeAgo(dateStr) {
+      if (!dateStr) return 'Never'
+      const diff = (Date.now() - new Date(dateStr)) / 1000
+      if (diff < 60) return 'just now'
+      if (diff < 3600) return `${Math.floor(diff/60)}m ago`
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
+      return `${Math.floor(diff/86400)} days ago`
+    }
+
+    function urgencyInfo(lastHelped) {
+      if (!lastHelped) return { cls: 'urgent', msg: '🔴 This person hasn\'t been helped recently. They need you.' }
+      const days = (Date.now() - new Date(lastHelped)) / 86400000
+      if (days > 7) return { cls: 'urgent', msg: `🔴 Last helped ${Math.floor(days)} days ago. High priority.` }
+      if (days > 3) return { cls: 'moderate', msg: `🟡 Last helped ${Math.floor(days)} days ago. Could use another visit.` }
+      return { cls: 'recent', msg: `🟢 Recently helped — ${timeAgo(lastHelped)}. Doing well with support.` }
+    }
+
+    const { data: profile, error } = await supabase
+      .from('individual_profiles')
+      .select('*')
+      .eq('id', profileId)
+      .single()
+
+    if (error || !profile) {
+      document.getElementById('profile-content').innerHTML = `<div style="text-align:center;padding:4rem;color:var(--gray)">Profile not found. <a href="profiles-directory.html" style="color:var(--gold)">Go back</a></div>`
+    } else {
+      const u = urgencyInfo(profile.last_helped_at)
+      const needs = profile.needs || []
+
+      document.getElementById('profile-content').innerHTML = `
+        <div class="urgency-banner ${u.cls}">
+          <span style="font-size:1.25rem">🧡</span>
+          <span>${u.msg}</span>
+        </div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar-lg">${profile.avatar_emoji || '👤'}</div>
+          <div class="profile-hero-info">
+            <h1>${profile.display_name}</h1>
+            <div class="profile-zone-tag">📍 ${profile.zone || 'Oakland'}</div>
+            <div class="profile-desc">${profile.description || 'No description added yet.'}</div>
+          </div>
+        </div>
+
+        <div class="card section-block">
+          <div class="block-label">Current Needs</div>
+          <div class="needs-grid">
+            ${needs.length > 0 ? needs.map(n => `<span class="need-chip">${n}</span>`).join('') : '<span style="color:var(--gray);font-size:0.85rem">No needs recorded yet.</span>'}
+          </div>
+        </div>
+
+        <div class="card section-block">
+          <div class="block-label">Interaction Notes</div>
+          <p style="color:var(--gray);font-size:0.88rem;line-height:1.7">${profile.notes || 'No notes yet. Add one after your next visit.'}</p>
+          <div class="add-note-form" style="margin-top:1.25rem">
+            <textarea id="new-note" rows="2" placeholder="Add a note from today's visit..." style="width:100%;background:var(--navy-mid);border:1px solid rgba(245,166,35,0.2);border-radius:8px;padding:0.75rem;color:var(--white);font-family:inherit;font-size:0.88rem;resize:vertical"></textarea>
+            <button onclick="saveNote('${profile.id}')" class="btn btn-primary btn-sm" style="margin-top:0.75rem">Save Note</button>
+          </div>
+        </div>
+
+        <div class="card section-block">
+          <div class="block-label">Support History</div>
+          <div id="history-list">
+            <div style="color:var(--gray);font-size:0.85rem">Last helped: <strong style="color:var(--white)">${timeAgo(profile.last_helped_at)}</strong></div>
+          </div>
+          <div style="margin-top:1.25rem">
+            <button onclick="logHelp('${profile.id}')" class="btn btn-primary btn-sm">✅ I helped them today</button>
+          </div>
+        </div>
+      `
+    }
+
+    window.saveNote = async function(id) {
+      const note = document.getElementById('new-note').value.trim()
+      if (!note) return
+      const { error } = await supabase
+        .from('individual_profiles')
+        .update({ notes: note })
+        .eq('id', id)
+      if (!error) {
+        alert('Note saved 🧡')
+        document.getElementById('new-note').value = ''
+      }
+    }
+
+    window.logHelp = async function(id) {
+      const { error } = await supabase
+        .from('individual_profiles')
+        .update({ last_helped_at: new Date().toISOString() })
+        .eq('id', id)
+      if (!error) {
+        alert('Logged! Thank you for showing up. 🧡')
+        window.location.reload()
+      }
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
+  </script>
+</body>
+</html>
