@@ -40,7 +40,19 @@
       <a href="login.html">Log In</a>
       <a href="signup.html" class="nav-btn">Join Us</a>
     </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="about.html">About</a>
+    <a href="map.html">Map</a>
+    <a href="pitch-deck.html">Our Pitch 🎥</a>
+    <a href="contact.html">Partner</a>
+    <a href="login.html">Log In</a>
+    <a href="signup.html" class="nav-btn">Join Us</a>
+  </div>
+  <script>function toggleMenu(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobile-menu').classList.toggle('open')}</script>
 
   <div class="page">
     <section class="about-hero">
