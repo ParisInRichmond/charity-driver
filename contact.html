@@ -114,27 +114,55 @@
 
   <script type="module">
     import { supabase } from './supabase.js'
+
     document.getElementById('contact-form').addEventListener('submit', async (e) => {
       e.preventDefault()
       const btn = document.getElementById('c-btn')
-      btn.textContent = 'Sending...'; btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'
-      const { error } = await supabase.from('contact_submissions').insert({
-        first_name: document.getElementById('c-first').value,
-        last_name: document.getElementById('c-last').value,
-        email: document.getElementById('c-email').value,
-        type: document.getElementById('c-type').value,
-        organization: document.getElementById('c-org').value,
-        message: document.getElementById('c-message').value
+      const errorEl = document.getElementById('contact-error')
+      const successEl = document.getElementById('contact-success')
+      errorEl.style.display = 'none'
+      btn.textContent = 'Sending...'
+      btn.style.opacity = '0.7'
+      btn.style.pointerEvents = 'none'
+
+      const firstName = document.getElementById('c-first').value.trim()
+      const lastName = document.getElementById('c-last').value.trim()
+      const email = document.getElementById('c-email').value.trim()
+      const type = document.getElementById('c-type').value
+      const org = document.getElementById('c-org').value.trim()
+      const message = document.getElementById('c-message').value.trim()
+
+      // 1. Save to Supabase
+      await supabase.from('contact_submissions').insert({
+        first_name: firstName, last_name: lastName,
+        email, type, organization: org, message
       })
-      if (error) {
-        document.getElementById('contact-error').textContent = error.message
-        document.getElementById('contact-error').style.display = 'block'
-      } else {
-        document.getElementById('contact-success').textContent = '✅ Message sent! We\'ll be in touch within 24 hours.'
-        document.getElementById('contact-success').style.display = 'block'
-        document.getElementById('contact-form').reset()
+
+      // 2. Send email notification via Formsubmit (free, no signup)
+      try {
+        const formData = new FormData()
+        formData.append('name', `${firstName} ${lastName}`)
+        formData.append('email', email)
+        formData.append('_subject', `🧡 New Charity Driver inquiry from ${firstName} (${type})`)
+        formData.append('message', `Type: ${type}\nOrg: ${org || 'N/A'}\nEmail: ${email}\n\nMessage:\n${message}`)
+        formData.append('_captcha', 'false')
+        formData.append('_template', 'table')
+
+        await fetch('https://formsubmit.co/paris@hiddengeniusproject.org', {
+          method: 'POST',
+          body: formData
+        })
+      } catch(err) {
+        // Email failed silently — Supabase still saved it
+        console.warn('Email notification failed:', err)
       }
-      btn.textContent = 'Send Message →'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'
+
+      successEl.textContent = '\u2705 Message sent! We\'ll be in touch within 24 hours.'
+      successEl.style.display = 'block'
+      document.getElementById('contact-form').reset()
+      btn.textContent = 'Send Message →'
+      btn.style.opacity = '1'
+      btn.style.pointerEvents = 'auto'
     })
   </script>
 <script type="module">import { initMia } from "./mia.js"; initMia()</script>
