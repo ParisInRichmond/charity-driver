@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     .admin-layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 64px); }
-    .sidebar-nav { background: rgba(10,22,40,0.8); border-right: 1px solid rgba(245,166,35,0.1); padding: 1.5rem 0; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; }
+    .sidebar-nav { background: rgba(10,28,15,0.9); border-right: 1px solid rgba(245,166,35,0.15); padding: 1.5rem 0; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; }
     .sidebar-nav .nav-section { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--gray); padding: 0.75rem 1.25rem 0.4rem; }
     .sidebar-nav a { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1.25rem; color: var(--light); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: all 0.15s; border-left: 3px solid transparent; }
     .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--gold); background: rgba(245,166,35,0.06); border-left-color: var(--gold); }
@@ -68,7 +68,7 @@
 <body>
   <nav>
     <a href="index.html" class="nav-logo">
-      <img src="charitydriver.png" alt="Charity Driver" />
+      <img src="charitydriver.png" alt="Charity Driver" style="height:42px" />
       <span class="nav-logo-text">Charity <span>Driver</span></span>
     </a>
     <div class="nav-links">
@@ -249,30 +249,40 @@
   </div>
 
   <script type="module">
-    import { supabase, requireAuth } from './supabase.js'
+    import { supabase } from './supabase.js'
 
-    const user = await requireAuth()
+    // Auth + admin check
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = 'login.html'; throw new Error('not logged in') }
 
-    // Check admin
     const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single()
     if (!profile?.is_admin) {
-      alert('Access denied. Admins only.')
-      window.location.href = 'dashboard.html'
-      return
+      document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1rem;font-family:Inter,sans-serif;background:#0A1C0F;color:#fff">
+        <div style="font-size:3rem">🔐</div>
+        <div style="font-size:1.2rem;font-weight:700">Admin access required</div>
+        <div style="color:#8aab95;font-size:0.9rem">Your account doesn't have admin permissions yet.</div>
+        <div style="background:#0f2518;border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:1rem 1.5rem;font-size:0.85rem;color:#c8e6d4;margin-top:0.5rem">Run in Supabase SQL Editor:<br/><code style="color:#F5A623">update profiles set is_admin = true where email = '${user.email}';</code></div>
+        <a href="dashboard.html" style="color:#F5A623;margin-top:0.5rem">← Back to Dashboard</a>
+      </div>`
+      throw new Error('not admin')
     }
 
-    // SECTION SWITCHING via event delegation — works reliably with ES modules
+    // SECTION SWITCHING — attach immediately after auth passes
     document.querySelectorAll('.sidebar-nav a[data-section]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault()
         const name = link.dataset.section
         document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'))
         document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'))
-        document.getElementById('section-' + name).classList.add('active')
+        const target = document.getElementById('section-' + name)
+        if (target) target.classList.add('active')
         link.classList.add('active')
         loadSection(name)
       })
     })
+
+    // Also wire up the users tab buttons
+    window.loadUsers = loadUsers
 
     async function loadSection(name) {
       if (name === 'overview') loadOverview()
