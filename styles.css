@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap&display=swap');
+/* Fonts loaded async via HTML link tags for performance */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
