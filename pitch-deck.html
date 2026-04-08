@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Charity Driver — Investor Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#0A1628;--mid:#112240;--gold:#F5A623;--gold2:#f7b84b;--white:#ffffff;--gray:#8892b0;--light:#ccd6f6}
+body{font-family:'Inter',sans-serif;background:#000;color:var(--white);overflow:hidden;height:100vh;width:100vw}
+
+/* SLIDE CONTAINER */
+.deck{position:relative;width:100vw;height:100vh}
+.slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:4rem 6rem;background:var(--navy);opacity:0;transition:opacity 0.4s ease}
+.slide.active{display:flex;opacity:1}
+.slide-inner{width:100%;max-width:1100px}
+
+/* NAVIGATION */
+.nav-controls{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.5rem;z-index:100;background:rgba(10,22,40,0.9);border:1px solid rgba(245,166,35,0.2);border-radius:50px;padding:0.6rem 1.5rem}
+.nav-btn{background:none;border:none;color:var(--gold);cursor:pointer;font-size:1.2rem;padding:0.25rem 0.5rem;transition:transform 0.15s}
+.nav-btn:hover{transform:scale(1.2)}
+.slide-counter{font-size:0.82rem;color:var(--gray);font-weight:600;min-width:60px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--gold);transition:width 0.3s ease;z-index:100}
+.slide-num{position:fixed;top:1.25rem;right:1.5rem;font-size:0.72rem;color:var(--gray);z-index:100}
+
+/* TYPOGRAPHY */
+.eyebrow{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--gold);margin-bottom:1rem}
+.slide-title{font-family:'Lora',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:700;line-height:1.1;margin-bottom:1.25rem}
+.slide-sub{font-size:1.05rem;color:var(--gray);line-height:1.8;max-width:720px}
+em.gold{font-style:normal;color:var(--gold)}
+
+/* COVER SLIDE */
+.cover{background:var(--navy);text-align:center}
+.cover .logo-big{font-size:4rem;margin-bottom:1rem}
+.cover h1{font-family:'Lora',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:700;line-height:1.1;margin-bottom:1rem}
+.cover .tagline{font-size:1.2rem;color:var(--gray);margin-bottom:2rem}
+.cover .founder-tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);border-radius:30px;padding:0.5rem 1.25rem;font-size:0.85rem;color:var(--light)}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:2.5rem 0}
+.stat-box{background:var(--mid);border:1px solid rgba(245,166,35,0.15);border-radius:16px;padding:1.5rem;text-align:center}
+.stat-box .val{font-size:2.5rem;font-weight:800;color:var(--gold);font-family:'Lora',serif}
+.stat-box .lbl{font-size:0.78rem;color:var(--gray);margin-top:0.3rem;line-height:1.5}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.feature-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}
+.feature-item{display:flex;gap:1rem;align-items:flex-start}
+.feature-icon{width:42px;height:42px;border-radius:10px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.feature-text h4{font-size:0.92rem;font-weight:700;margin-bottom:0.2rem}
+.feature-text p{font-size:0.8rem;color:var(--gray);line-height:1.6}
+
+/* TABLE */
+.pitch-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+.pitch-table th{text-align:left;padding:0.7rem 1rem;font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);border-bottom:1px solid rgba(245,166,35,0.2)}
+.pitch-table td{padding:0.85rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.88rem;color:var(--light)}
+.pitch-table tr:last-child td{font-weight:800;color:var(--gold);border-bottom:none}
+
+/* TIMELINE */
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+.timeline-item{background:var(--mid);border:1px solid rgba(245,166,35,0.1);border-radius:14px;padding:1.25rem}
+.timeline-item .month{font-size:0.7rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem}
+.timeline-item h4{font-size:0.9rem;font-weight:700;margin-bottom:0.5rem}
+.timeline-item p{font-size:0.78rem;color:var(--gray);line-height:1.5}
+
+/* QUOTE */
+.big-quote{font-family:'Lora',serif;font-size:clamp(1.4rem,3vw,2.2rem);font-style:italic;line-height:1.6;color:var(--light);border-left:4px solid var(--gold);padding-left:2rem;margin:2rem 0}
+.big-quote cite{display:block;font-size:0.82rem;font-style:normal;color:var(--gold);font-weight:700;margin-top:0.75rem}
+
+/* USE OF FUNDS */
+.funds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
+.fund-item{background:var(--mid);border-radius:12px;padding:1.1rem;border:1px solid rgba(245,166,35,0.1)}
+.fund-item .amount{font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:0.3rem}
+.fund-item .use{font-size:0.78rem;color:var(--gray);line-height:1.5}
+
+/* CTA SLIDE */
+.cta-slide{text-align:center}
+.cta-slide h1{font-family:'Lora',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:700;margin-bottom:1.25rem;line-height:1.2}
+.cta-slide p{font-size:1.05rem;color:var(--gray);margin-bottom:2.5rem;line-height:1.8}
+.contact-box{background:var(--mid);border:1px solid rgba(245,166,35,0.2);border-radius:16px;padding:2rem;display:inline-block;text-align:left;min-width:380px}
+.contact-row{display:flex;align-items:center;gap:0.85rem;margin-bottom:0.85rem;font-size:0.92rem}
+.contact-row:last-child{margin:0}
+.contact-row .icon{font-size:1.1rem;width:28px}
+.contact-row span{color:var(--light)}
+.contact-row strong{color:var(--gold)}
+
+/* BG ACCENTS */
+.slide::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(245,166,35,0.06) 0%,transparent 60%);pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slide-num">1 / 10</div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active cover" id="slide-1">
+    <div class="slide-inner" style="text-align:center">
+      <div class="logo-big">🧡</div>
+      <h1>Charity Driver</h1>
+      <div class="tagline">Connecting donors to Oakland's unhoused community — in real time.</div>
+      <div class="founder-tag">👤 Paris Irving · Founder · parisirving.com</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <div class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="eyebrow">The Problem</div>
+      <div class="slide-title">Oakland has 4,800+ unhoused neighbors.<br/><em class="gold">Coordination is the missing piece.</em></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="val">4,800+</div><div class="lbl">Unhoused individuals in Oakland</div></div>
+        <div class="stat-box"><div class="val">$1B+</div><div class="lbl">CA annual homeless funding — yet numbers grow</div></div>
+        <div class="stat-box"><div class="val">0</div><div class="lbl">Real-time donor coordination tools exist</div></div>
+      </div>
+      <div class="slide-sub">Donors want to help but don't know where to go, what's needed, or whether someone has already been served today. Existing systems are government-facing, slow, and inaccessible to community volunteers.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE SOLUTION -->
+  <div class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="eyebrow">The Solution</div>
+      <div class="slide-title">Charity Driver — <em class="gold">Show up smarter.</em></div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📍</div>
+          <div class="feature-text"><h4>Real-Time Oakland Map</h4><p>10 hotspot zones with color-coded urgency — red to green — updating live as donors submit deliveries.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🚗</div>
+          <div class="feature-text"><h4>Delivery Logging System</h4><p>Donors log what they brought, where, and how many people served. Live feed updates instantly — no duplicate efforts.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🧑</div>
+          <div class="feature-text"><h4>Individual Support Profiles</h4><p>Private, consent-based profiles so donors can recognize and consistently serve the same individuals over time.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-text"><h4>Mia — AI Community Guide</h4><p>Warm, human chatbot that guides donors through the platform and answers questions in real time.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: MISSION -->
+  <div class="slide" id="slide-4">
+    <div class="slide-inner" style="max-width:800px;margin:0 auto">
+      <div class="eyebrow">Our Mission</div>
+      <div class="big-quote">
+        "We don't help because we have to.<br/>We help because we want to."
+        <cite>— Paris Irving, Founder</cite>
+      </div>
+      <div class="slide-sub" style="max-width:100%">Charity Driver is not a tech product. It is a movement — rooted in compassion, service, and the belief that ordinary people can do what institutions cannot: make someone feel seen. The brand is inspired by the highest form of love — sacrificial, unconditional, and freely given.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: MARKET OPPORTUNITY -->
+  <div class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="eyebrow">Market Opportunity</div>
+      <div class="slide-title">A city ready for <em class="gold">this solution.</em></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="val">180K+</div><div class="lbl">Bay Area donors interested in direct community giving</div></div>
+        <div class="stat-box"><div class="val">$2.1B</div><div class="lbl">Oakland nonprofit sector annual spend</div></div>
+        <div class="stat-box"><div class="val">$1B+</div><div class="lbl">California HHAP fund available for tech-enabled solutions</div></div>
+      </div>
+      <div class="slide-sub">Charity Driver qualifies for California state homeless tech funding, Oakland equity grants, and federal social services technology programs. The platform is live, functional, and ready to scale.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: REVENUE MODEL -->
+  <div class="slide" id="slide-6">
+    <div class="slide-inner two-col">
+      <div>
+        <div class="eyebrow">Revenue Model</div>
+        <div class="slide-title">Freemium + <em class="gold">Partnerships</em></div>
+        <div class="slide-sub">Four revenue streams with clear Year 1 targets. Built to be sustainable from day one.</div>
+      </div>
+      <div>
+        <table class="pitch-table">
+          <thead><tr><th>Revenue Stream</th><th>Year 1 Target</th></tr></thead>
+          <tbody>
+            <tr><td>🧡 Supporter subscriptions ($7/mo)</td><td>$4,200</td></tr>
+            <tr><td>🤝 Nonprofit partnerships</td><td>$10,000</td></tr>
+            <tr><td>🏛️ Government/grant funding</td><td>$25,000</td></tr>
+            <tr><td>📣 Corporate sponsorships</td><td>$5,000</td></tr>
+            <tr><td><strong>Total Year 1</strong></td><td><strong>$44,200</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: USE OF FUNDS -->
+  <div class="slide" id="slide-7">
+    <div class="slide-inner">
+      <div class="eyebrow">Use of Funds</div>
+      <div class="slide-title">$30,000 request — <em class="gold">deployed strategically.</em></div>
+      <div class="funds-grid">
+        <div class="fund-item"><div class="amount">$8,000</div><div class="use">Platform development — Stripe integration, backend scaling, mobile optimization</div></div>
+        <div class="fund-item"><div class="amount">$5,000</div><div class="use">Field operations — interviews, real data collection, individual profile building</div></div>
+        <div class="fund-item"><div class="amount">$7,000</div><div class="use">Marketing & community outreach — Facebook, TikTok, flyer campaigns</div></div>
+        <div class="fund-item"><div class="amount">$3,000</div><div class="use">Legal & compliance — nonprofit status application, privacy framework</div></div>
+        <div class="fund-item"><div class="amount">$7,000</div><div class="use">12-month operating expenses — domain, hosting, tools, part-time support</div></div>
+        <div class="fund-item" style="border-color:rgba(245,166,35,0.4)"><div class="amount" style="font-size:1.6rem">$30K total</div><div class="use">Full seed round to reach 500 users and 2 org partnerships</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: FOUNDER -->
+  <div class="slide" id="slide-8">
+    <div class="slide-inner two-col">
+      <div>
+        <div class="eyebrow">The Founder</div>
+        <div class="slide-title">Paris Irving</div>
+        <div class="slide-sub" style="margin-bottom:1.5rem">25-year-old Oakland native. Innovation Educator at The Hidden Genius Project — one of the nation's leading nonprofits training Black male youth in tech and entrepreneurship.</div>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-icon">🏫</div><div class="feature-text"><h4>Hidden Genius Project</h4><p>OAK3 alumnus → full-time Innovation Educator. Trains youth in HTML, CSS, Python, and AI.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">🌍</div><div class="feature-text"><h4>International Experience</h4><p>Taught coding workshops in London at International Tech Slam.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">🔍</div><div class="feature-text"><h4>Google-Verified Credibility</h4><p>Search "Paris Irving" — HGP profile, Charity Driver, Alumni Venture Seed Fund (Feb 2024) all appear.</p></div></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <div style="background:var(--mid);border:2px solid rgba(245,166,35,0.3);border-radius:20px;padding:2rem;text-align:center;max-width:300px">
+          <div style="font-size:5rem;margin-bottom:1rem">👤</div>
+          <div style="font-size:1.1rem;font-weight:800;margin-bottom:0.3rem">Paris Irving</div>
+          <div style="font-size:0.78rem;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase">Founder · Charity Driver</div>
+          <div style="font-size:0.78rem;color:var(--gray);margin-top:0.5rem">Innovation Educator<br/>The Hidden Genius Project</div>
+          <div style="margin-top:1rem;font-size:0.8rem;color:var(--gold)">parisirving.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: ROADMAP -->
+  <div class="slide" id="slide-9">
+    <div class="slide-inner">
+      <div class="eyebrow">12-Month Roadmap</div>
+      <div class="slide-title">Traction milestones — <em class="gold">already moving.</em></div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="month">April 2026</div><h4>Platform Live ✅</h4><p>parisirving.com launched. Map, auth, delivery logging, profiles, Mia chatbot all live.</p></div>
+        <div class="timeline-item"><div class="month">May 2026</div><h4>First Partnership</h4><p>Stripe payments live. First nonprofit partner. 10 paying Supporters.</p></div>
+        <div class="timeline-item"><div class="month">June 2026</div><h4>100 Active Donors</h4><p>First grant received. Field data collection begins with partner org.</p></div>
+        <div class="timeline-item"><div class="month">July 2026</div><h4>500 Users</h4><p>50 paying subscribers. Real individual profiles with consent-based data.</p></div>
+        <div class="timeline-item"><div class="month">Sept 2026</div><h4>HGP Celebration</h4><p>Present Charity Driver at End of Summer Celebration — parents and investors.</p></div>
+        <div class="timeline-item"><div class="month">Dec 2026</div><h4>$44K Revenue</h4><p>2 org partnerships. Seed round deployed. Ready for Series A conversations.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: CTA -->
+  <div class="slide cta-slide" id="slide-10">
+    <div class="slide-inner">
+      <div class="eyebrow">The Ask</div>
+      <h1>Join us in building<br/>something that <em class="gold">matters.</em></h1>
+      <p>We're raising $30,000 in seed funding to scale Charity Driver across Oakland and begin building the data infrastructure that makes this platform fundable at every level.</p>
+      <div class="contact-box">
+        <div class="contact-row"><span class="icon">👤</span><span><strong>Paris Irving</strong> — Founder, Charity Driver</span></div>
+        <div class="contact-row"><span class="icon">🌐</span><span><strong>parisirving.com</strong></span></div>
+        <div class="contact-row"><span class="icon">🏫</span><span>Innovation Educator, <strong>The Hidden Genius Project</strong></span></div>
+        <div class="contact-row"><span class="icon">📍</span><span>Richmond / Oakland, CA</span></div>
+        <div class="contact-row"><span class="icon">🧡</span><span><em>"Not because we have to. Because we want to."</em></span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-controls">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+  const total = 10
+  let current = 1
+
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'))
+    document.getElementById('slide-' + n).classList.add('active')
+    document.getElementById('counter').textContent = n + ' / ' + total
+    document.getElementById('slide-num').textContent = n + ' / ' + total
+    document.getElementById('progress').style.width = (n / total * 100) + '%'
+    current = n
+  }
+
+  function nextSlide() { if (current < total) showSlide(current + 1) }
+  function prevSlide() { if (current > 1) showSlide(current - 1) }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide()
+    if (e.key === 'ArrowLeft') prevSlide()
+  })
+
+  showSlide(1)
+</script>
+</body>
+</html>
