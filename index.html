@@ -61,11 +61,11 @@
 
         <div class="stats">
           <div class="stat-card card">
-            <div class="number">4,800+</div>
+            <div class="number" id="count-1">0</div>
             <div class="label">Unhoused neighbors in Oakland</div>
           </div>
           <div class="stat-card card">
-            <div class="number">10</div>
+            <div class="number" id="count-2">0</div>
             <div class="label">High-need areas mapped across the city</div>
           </div>
           <div class="stat-card card">
@@ -158,5 +158,35 @@
       <span style="font-size:0.78rem;opacity:0.6;margin-top:0.5rem;display:block">Not because we have to. Because we choose to.</span>
     </footer>
   </div>
+<script>
+  function animateCount(id, target, suffix, duration) {
+    const el = document.getElementById(id)
+    if (!el) return
+    let start = 0
+    const step = Math.ceil(target / (duration / 16))
+    const timer = setInterval(() => {
+      start += step
+      if (start >= target) {
+        start = target
+        clearInterval(timer)
+      }
+      el.textContent = start.toLocaleString() + suffix
+    }, 16)
+  }
+
+  // Trigger when stats scroll into view
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCount('count-1', 4800, '+', 1800)
+        animateCount('count-2', 10, '', 1200)
+        observer.disconnect()
+      }
+    })
+  }, { threshold: 0.3 })
+
+  const statsEl = document.querySelector('.stats')
+  if (statsEl) observer.observe(statsEl)
+</script>
 </body>
 </html>
