@@ -271,6 +271,14 @@ export function initMia() {
       response = "You can reach us through our <a href='contact.html'>contact page</a>. We respond within 24 hours. For partnership inquiries, org connections, or press — that's the right place."
     } else if (lower.includes('dashboard')) {
       response = "Your <a href='dashboard.html'>dashboard</a> shows your delivery history, impact stats, and the AI-recommended zone for your next delivery based on time of day."
+    } else if (lower.includes('pitch') || lower.includes('investor') || lower.includes('invest') || lower.includes('fund')) {
+      response = "Interested in partnering with or investing in Charity Driver? Check out our full investor pitch deck — it covers the problem, solution, market opportunity, and our ask. <a href='pitch-deck.html'>View the Pitch Deck 🎥</a> or reach out directly on our <a href='contact.html'>contact page</a>."
+    } else if (lower.includes('admin')) {
+      response = "The admin dashboard is for verified Charity Driver staff only. If you're an admin, go to <a href='admin.html'>parisirving.com/admin.html</a> and log in with your admin email. Access is controlled by account permissions."
+    } else if (lower.includes('tiktok') || lower.includes('social') || lower.includes('follow')) {
+      response = "Follow Charity Driver's founder Paris Irving on TikTok and Instagram for behind-the-scenes content, field visits, and updates on the platform. Search @parisislive. 🧡"
+    } else if (lower.includes('script') || lower.includes('video') || lower.includes('youtube')) {
+      response = "Paris Irving documents the Charity Driver journey on TikTok and YouTube. Follow along to see the real story of building a community platform from Oakland. 🎥"
     } else {
       response = "That's a great question. I want to make sure I give you the right answer — for anything I'm not sure about, our <a href='contact.html'>contact page</a> is the best next step. Is there something specific about Charity Driver I can help clarify? 🧡"
     }
