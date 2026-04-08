@@ -37,8 +37,15 @@
 
         <form id="login-form">
           <div class="form-group"><label>Email Address</label><input type="email" id="email" placeholder="paris@example.com" required /></div>
-          <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Your password" required /></div>
-          <div class="forgot"><a href="#">Forgot password?</a></div>
+          <div class="form-group">
+            <label>Password</label>
+            <div style="position:relative">
+              <input type="password" id="password" placeholder="Your password" required style="padding-right:2.5rem"/>
+              <span onclick="togglePass()" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1.1rem;user-select:none" id="eye">👁️</span>
+            </div>
+          </div>
+          <div class="forgot"><a href="#" onclick="forgotPassword(event)">Forgot password?</a></div>
+          <div id="forgot-msg" style="display:none;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#34d399;margin-bottom:1rem"></div>
           <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%">Log In →</button>
         </form>
 
@@ -52,6 +59,40 @@
     import { supabase, redirectIfLoggedIn } from './supabase.js'
 
     redirectIfLoggedIn()
+
+    window.togglePass = function() {
+      const input = document.getElementById('password')
+      const eye = document.getElementById('eye')
+      if (input.type === 'password') {
+        input.type = 'text'
+        eye.textContent = '🙈'
+      } else {
+        input.type = 'password'
+        eye.textContent = '👁️'
+      }
+    }
+
+    window.forgotPassword = async function(e) {
+      e.preventDefault()
+      const email = document.getElementById('email').value.trim()
+      const msgEl = document.getElementById('forgot-msg')
+      if (!email) {
+        msgEl.style.background = 'rgba(239,68,68,0.1)'
+        msgEl.style.borderColor = 'rgba(239,68,68,0.3)'
+        msgEl.style.color = '#f87171'
+        msgEl.textContent = 'Enter your email address above first, then click Forgot Password.'
+        msgEl.style.display = 'block'
+        return
+      }
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://parisinrichmond.github.io/charity-driver/reset-password.html'
+      })
+      msgEl.style.background = 'rgba(52,211,153,0.1)'
+      msgEl.style.borderColor = 'rgba(52,211,153,0.3)'
+      msgEl.style.color = '#34d399'
+      msgEl.textContent = error ? error.message : '✅ Password reset link sent! Check your email.'
+      msgEl.style.display = 'block'
+    }
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault()
