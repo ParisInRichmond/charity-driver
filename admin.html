@@ -83,18 +83,18 @@
       <!-- SIDEBAR -->
       <div class="sidebar-nav">
         <div class="nav-section">Overview</div>
-        <a href="#" class="active" onclick="showSection('overview',this)">📊 Dashboard</a>
-        <a href="#" onclick="showSection('traffic',this)">📈 Traffic</a>
+        <a href="#" class="active" data-section="overview">📊 Dashboard</a>
+        <a href="#" data-section="traffic">📈 Traffic</a>
         <div class="nav-section">People</div>
-        <a href="#" onclick="showSection('users',this)">👤 Users</a>
-        <a href="#" onclick="showSection('deliveries',this)">🚗 Deliveries</a>
-        <a href="#" onclick="showSection('hotspots',this)">📍 Hotspots</a>
+        <a href="#" data-section="users">👤 Users</a>
+        <a href="#" data-section="deliveries">🚗 Deliveries</a>
+        <a href="#" data-section="hotspots">📍 Hotspots</a>
         <div class="nav-section">Mia</div>
-        <a href="#" onclick="showSection('mia-analytics',this)">🤖 Mia Analytics</a>
-        <a href="#" onclick="showSection('knowledge-base',this)">📚 Knowledge Base</a>
+        <a href="#" data-section="mia-analytics">🤖 Mia Analytics</a>
+        <a href="#" data-section="knowledge-base">📚 Knowledge Base</a>
         <div class="nav-section">Content</div>
-        <a href="#" onclick="showSection('content',this)">✏️ Site Content</a>
-        <a href="#" onclick="showSection('reports',this)">🚩 Reports</a>
+        <a href="#" data-section="content">✏️ Site Content</a>
+        <a href="#" data-section="reports">🚩 Reports</a>
       </div>
 
       <!-- MAIN CONTENT -->
@@ -261,14 +261,18 @@
       return
     }
 
-    // SECTION SWITCHING
-    window.showSection = function(name, el) {
-      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'))
-      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'))
-      document.getElementById('section-' + name).classList.add('active')
-      el.classList.add('active')
-      loadSection(name)
-    }
+    // SECTION SWITCHING via event delegation — works reliably with ES modules
+    document.querySelectorAll('.sidebar-nav a[data-section]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        const name = link.dataset.section
+        document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'))
+        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'))
+        document.getElementById('section-' + name).classList.add('active')
+        link.classList.add('active')
+        loadSection(name)
+      })
+    })
 
     async function loadSection(name) {
       if (name === 'overview') loadOverview()

@@ -102,7 +102,14 @@ export function initMia() {
       #mia-send { background:#F5A623;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
     </style>
 
-    <button id="mia-btn" title="Chat with Mia">🧡</button>
+    <button id="mia-btn" title="Chat with Mia">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 4C10 4 6 7 6 11C6 13.5 7.5 15.5 9 17L14 24L19 17C20.5 15.5 22 13.5 22 11C22 7 18 4 14 4Z" fill="#0A1628"/>
+        <circle cx="11" cy="11" r="1.5" fill="#0A1628"/>
+        <circle cx="17" cy="11" r="1.5" fill="#0A1628"/>
+        <path d="M11 14.5C11 14.5 12 16 14 16C16 16 17 14.5 17 14.5" stroke="#0A1628" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
 
     <div id="mia-box">
       <div id="mia-header">
@@ -156,12 +163,45 @@ export function initMia() {
     handleSend()
   }
 
+  // Voice toggle state
+  let voiceEnabled = false
+
+  // Add voice toggle button to header
+  const voiceBtn = document.createElement('button')
+  voiceBtn.id = 'mia-voice-btn'
+  voiceBtn.title = 'Toggle Mia voice'
+  voiceBtn.style.cssText = 'background:none;border:1px solid rgba(245,166,35,0.3);border-radius:8px;color:#F5A623;cursor:pointer;font-size:0.75rem;padding:0.25rem 0.5rem;margin-right:0.25rem;font-family:inherit'
+  voiceBtn.textContent = '🔇 Voice'
+  voiceBtn.addEventListener('click', () => {
+    voiceEnabled = !voiceEnabled
+    voiceBtn.textContent = voiceEnabled ? '🔊 Voice' : '🔇 Voice'
+    voiceBtn.style.background = voiceEnabled ? 'rgba(245,166,35,0.15)' : 'none'
+    if (!voiceEnabled) window.speechSynthesis.cancel()
+  })
+  document.getElementById('mia-close').before(voiceBtn)
+
+  function speakText(text) {
+    if (!voiceEnabled || !window.speechSynthesis) return
+    window.speechSynthesis.cancel()
+    const clean = text.replace(/<[^>]+>/g, '').replace(/[🧡🔴🟠🟡🟢✅🚗📍]/g, '')
+    const utterance = new SpeechSynthesisUtterance(clean)
+    utterance.rate = 0.95
+    utterance.pitch = 1.05
+    utterance.volume = 1
+    // Try to find a warm female voice
+    const voices = window.speechSynthesis.getVoices()
+    const preferred = voices.find(v => v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || v.name.includes('Female'))
+    if (preferred) utterance.voice = preferred
+    window.speechSynthesis.speak(utterance)
+  }
+
   function addMessage(role, text) {
     const div = document.createElement('div')
     div.className = `mia-msg ${role}`
     div.innerHTML = text
     messages.appendChild(div)
     messages.scrollTop = messages.scrollHeight
+    if (role === 'mia') speakText(text)
     return div
   }
 
