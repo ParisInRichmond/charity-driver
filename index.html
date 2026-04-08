@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Charity Driver — Show Up for Oakland</title>
+  <meta name="description" content="Charity Driver connects free-roam donors with unhoused individuals across Oakland, CA. See who needs help right now, log your delivery, and track your impact in real time.">
+  <meta name="theme-color" content="#0A1C0F">
+  <meta property="og:title" content="Charity Driver — Show Up for Oakland">
+  <meta property="og:description" content="Real-time map of Oakland's highest-need areas. Free to use. Built with compassion.">
+  <meta property="og:image" content="https://parisirving.com/charitydriver.png">
+  <meta property="og:url" content="https://parisirving.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preload hero image for faster LCP -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1518398046578-8cca57782e17?w=1200&q=75">
   <link rel="stylesheet" href="styles.css" />
   <style>
     .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 64px; position: relative; overflow: hidden; }
@@ -32,7 +45,7 @@
   </style>
 </head>
 <body>
-  <nav>
+  <nav aria-label="Main navigation">
     <a href="index.html" class="nav-logo">
       <img src="logo.svg" alt="Charity Driver logo" />
       <span class="nav-logo-text">Charity <span>Driver</span></span>
@@ -45,7 +58,7 @@
       <a href="login.html">Log In</a>
       <a href="signup.html" class="nav-btn">Join Us</a>
     </div>
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open navigation menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </nav>
