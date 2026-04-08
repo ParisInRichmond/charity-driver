@@ -3,15 +3,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --navy: #0A1628;
-  --navy-mid: #112240;
-  --navy-light: #1a3a5c;
+  --navy: #0A1C0F;
+  --navy-mid: #0f2518;
+  --navy-light: #1a3d28;
   --gold: #F5A623;
   --gold-light: #f7b84b;
   --warm: #FFF4E6;
   --white: #ffffff;
-  --gray: #8892b0;
-  --light: #ccd6f6;
+  --gray: #8aab95;
+  --light: #c8e6d4;
   /* Urgency colors */
   --urgent-red: #ef4444;
   --urgent-orange: #f97316;
