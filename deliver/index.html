@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log a Delivery — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .deliver-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; padding: 3rem 0 5rem; align-items: flex-start; }
+    .deliver-layout h1 { font-family: 'Lora', serif; font-size: 1.9rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .deliver-layout .sub { color: var(--gray); margin-bottom: 2rem; line-height: 1.7; }
+    .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .resource-item { border: 2px solid rgba(245,166,35,0.15); border-radius: 12px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .resource-item:hover, .resource-item.selected { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+    .resource-item .icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .resource-item .name { font-size: 0.8rem; font-weight: 700; }
+    /* SUCCESS */
+    .success-screen { display: none; text-align: center; padding: 2rem; }
+    .success-screen .big-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .success-screen h2 { font-family: 'Lora', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .impact-box { background: rgba(245,166,35,0.06); border: 1px solid rgba(245,166,35,0.2); border-radius: 14px; padding: 1.5rem; margin: 1.5rem 0; }
+    /* LIVE FEED PANEL */
+    .feed-panel { position: sticky; top: 84px; }
+    .feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .feed-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); }
+    .live-indicator { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: #f87171; font-weight: 700; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; animation: pulse-red 1.5s infinite; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: var(--gray); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+    @media(max-width:900px) { .deliver-layout { grid-template-columns: 1fr; } .feed-panel { position: static; } }
+    @media(max-width:500px) { .resource-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:52px;width:auto" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="map.html">Map</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="logout-btn">Log Out</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="container">
+      <div class="deliver-layout">
+
+        <!-- FORM SIDE -->
+        <div>
+          <div id="form-screen">
+            <h1>You showed up. 🧡</h1>
+            <div class="sub">Tell us about your delivery. Every submission updates the map in real time so others know where help just arrived.</div>
+
+            <div id="error-msg" class="error-msg"></div>
+
+            <form id="deliver-form">
+              <div class="form-group">
+                <label>Where did you deliver?</label>
+                <select id="location" required>
+                  <option value="">Select a location...</option>
+                  <option>Downtown Oakland (12th St BART)</option>
+                  <option>Lake Merritt</option>
+                  <option>Fruitvale BART</option>
+                  <option>East 12th Street Corridor</option>
+                  <option>International Blvd (E. Oakland)</option>
+                  <option>West Oakland BART</option>
+                  <option>Foothill Blvd (Deep East Oakland)</option>
+                  <option>San Antonio Park</option>
+                  <option>Coliseum Area</option>
+                  <option>Laney College Area</option>
+                  <option>Other (describe in notes)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>What did you bring? (select all)</label>
+                <div class="resource-grid" style="margin-top:0.5rem" id="resources">
+                  <div class="resource-item" onclick="toggleResource(this,'Food')"><div class="icon">🍱</div><div class="name">Food</div></div>
+                  <div class="resource-item" onclick="toggleResource(this,'Water')"><div class="icon">💧</div><div class="name">Water</div></div>
+                  <div class="resource-item" onclick="toggleResource(this,'Hygiene Kits')"><div class="icon">🧴</div><div class="name">Hygiene Kits</div></div>
+                  <div class="resource-item" onclick="toggleResource(this,'Clothing')"><div class="icon">👕</div><div class="name">Clothing</div></div>
+                  <div class="resource-item" onclick="toggleResource(this,'Blankets')"><div class="icon">🛏️</div><div class="name">Blankets</div></div>
+                  <div class="resource-item" onclick="toggleResource(this,'Resource Info')"><div class="icon">📋</div><div class="name">Resource Info</div></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Approx. number of people served</label>
+                <input type="number" id="people-served" min="1" placeholder="e.g. 15" required />
+              </div>
+
+              <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea id="notes" rows="3" placeholder="What did you see? What else was needed? Any observations that help the next donor..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%;margin-top:0.5rem;font-size:1rem">Submit Delivery ✓</button>
+            </form>
+          </div>
+
+          <div class="success-screen" id="success-screen">
+            <div class="big-icon">🧡</div>
+            <h2>You made a difference today.</h2>
+            <p style="color:var(--gray);line-height:1.8">That location is now updated on the map. Other donors can see where help just arrived. Your act matters more than you know.</p>
+            <div class="impact-box">
+              <p style="font-size:0.95rem;line-height:1.7">An estimated <strong style="color:var(--gold)" id="impact-num">—</strong> people will benefit from what you brought today. That's <strong style="color:var(--gold)">real impact</strong> — not a statistic.</p>
+            </div>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+              <a href="deliver.html" class="btn btn-primary">Go Again</a>
+              <a href="dashboard.html" class="btn btn-outline">My Dashboard</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE FEED PANEL -->
+        <div class="feed-panel">
+          <div class="card">
+            <div class="feed-header">
+              <span class="feed-title">Live Delivery Feed</span>
+              <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
+            </div>
+            <div class="legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>High need</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Moderate</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>Some need</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Recently served</div>
+            </div>
+            <div id="live-feed">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase, requireAuth } from './supabase.js'
+
+    const user = await requireAuth()
+    let selectedResources = []
+
+    window.toggleResource = function(el, name) {
+      el.classList.toggle('selected')
+      if (selectedResources.includes(name)) {
+        selectedResources = selectedResources.filter(r => r !== name)
+      } else {
+        selectedResources.push(name)
+      }
+    }
+
+    // Urgency level based on hours since last delivery
+    function urgencyLevel(hoursAgo) {
+      if (hoursAgo === null || hoursAgo > 12) return { cls: 'red', label: 'HIGH NEED', badge: 'live' }
+      if (hoursAgo > 6) return { cls: 'orange', label: 'MODERATE', badge: 'recent' }
+      if (hoursAgo > 2) return { cls: 'yellow', label: 'SOME NEED', badge: 'recent' }
+      return { cls: 'green', label: 'RECENTLY SERVED', badge: 'served' }
+    }
+
+    function timeAgo(dateStr) {
+      const diff = (Date.now() - new Date(dateStr)) / 1000
+      if (diff < 60) return 'just now'
+      if (diff < 3600) return `${Math.floor(diff/60)}m ago`
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`
+      return `${Math.floor(diff/86400)}d ago`
+    }
+
+    async function loadFeed() {
+      const { data } = await supabase
+        .from('deliveries')
+        .select('location, resources, people_served, created_at')
+        .order('created_at', { ascending: false })
+        .limit(12)
+
+      const feed = document.getElementById('live-feed')
+
+      if (!data || data.length === 0) {
+        feed.innerHTML = `<div style="text-align:center;color:var(--gray);font-size:0.82rem;padding:1.5rem 0">Be the first to log a delivery today. 🧡</div>`
+        return
+      }
+
+      feed.innerHTML = data.map(d => {
+        const hours = (Date.now() - new Date(d.created_at)) / 3600000
+        const u = urgencyLevel(hours)
+        const resources = Array.isArray(d.resources) ? d.resources.slice(0,2).join(', ') : 'Supplies'
+        return `
+          <div class="live-feed-item ${u.cls}">
+            <div class="urgency-dot ${u.cls}"></div>
+            <div class="feed-text">
+              <strong>${d.location}</strong><br/>
+              <span style="color:var(--gray);font-size:0.78rem">${resources} · ${d.people_served || '?'} people</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem">
+              <span class="live-badge ${u.badge}">${u.label}</span>
+              <span class="feed-time">${timeAgo(d.created_at)}</span>
+            </div>
+          </div>`
+      }).join('')
+    }
+
+    loadFeed()
+
+    // Realtime subscription — updates feed live when anyone submits
+    supabase
+      .channel('deliveries-feed')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'deliveries' }, () => {
+        loadFeed()
+      })
+      .subscribe()
+
+    // Submit
+    document.getElementById('deliver-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = document.getElementById('submit-btn')
+      const errorEl = document.getElementById('error-msg')
+      errorEl.style.display = 'none'
+      btn.textContent = 'Submitting...'
+      btn.style.opacity = '0.7'
+      btn.style.pointerEvents = 'none'
+
+      const location = document.getElementById('location').value
+      const peopleServed = parseInt(document.getElementById('people-served').value) || 0
+      const notes = document.getElementById('notes').value
+
+      const { error } = await supabase.from('deliveries').insert({
+        user_id: user.id,
+        location,
+        resources: selectedResources,
+        people_served: peopleServed,
+        notes
+      })
+
+      if (error) {
+        errorEl.textContent = error.message
+        errorEl.style.display = 'block'
+        btn.textContent = 'Submit Delivery ✓'
+        btn.style.opacity = '1'
+        btn.style.pointerEvents = 'auto'
+        return
+      }
+
+      document.getElementById('impact-num').textContent = `${peopleServed} people`
+      document.getElementById('form-screen').style.display = 'none'
+      document.getElementById('success-screen').style.display = 'block'
+      window.scrollTo(0, 0)
+      loadFeed()
+    })
+
+    document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
+  </script>
+</body>
+</html>

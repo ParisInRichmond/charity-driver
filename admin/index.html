@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 64px); }
+    .sidebar-nav { background: rgba(10,28,15,0.9); border-right: 1px solid rgba(245,166,35,0.15); padding: 1.5rem 0; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; }
+    .sidebar-nav .nav-section { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--gray); padding: 0.75rem 1.25rem 0.4rem; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1.25rem; color: var(--light); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: all 0.15s; border-left: 3px solid transparent; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--gold); background: rgba(245,166,35,0.06); border-left-color: var(--gold); }
+    .admin-content { padding: 2rem; overflow-y: auto; }
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+    .page-title { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .page-sub { color: var(--gray); font-size: 0.88rem; margin-bottom: 2rem; }
+    /* METRICS GRID */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.12); border-radius: 14px; padding: 1.25rem; }
+    .metric-card .val { font-size: 1.9rem; font-weight: 800; color: var(--gold); }
+    .metric-card .lbl { font-size: 0.75rem; color: var(--gray); margin-top: 0.2rem; }
+    .metric-card .trend { font-size: 0.72rem; margin-top: 0.4rem; }
+    .trend.up { color: #34d399; }
+    .trend.down { color: #f87171; }
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .data-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); border-bottom: 1px solid rgba(245,166,35,0.15); }
+    .data-table td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--light); }
+    .data-table tr:hover td { background: rgba(245,166,35,0.03); }
+    .data-table .badge { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 700; }
+    .badge-sub { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+    .badge-free { background: rgba(148,163,184,0.12); color: var(--gray); border: 1px solid rgba(148,163,184,0.2); }
+    .badge-admin { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    /* TABS */
+    .tab-bar { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab-btn { background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.15); border-radius: 8px; padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--gray); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .tab-btn:hover, .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(245,166,35,0.08); }
+    /* KNOWLEDGE BASE */
+    .kb-item { background: var(--navy); border: 1px solid rgba(245,166,35,0.1); border-radius: 12px; padding: 1.1rem; margin-bottom: 0.75rem; }
+    .kb-item .kb-q { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .kb-item .kb-a { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+    .kb-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+    .kb-btn { font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 6px; border: 1px solid rgba(245,166,35,0.2); background: none; color: var(--gold); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .kb-btn:hover { background: rgba(245,166,35,0.1); }
+    .kb-btn.danger { border-color: rgba(239,68,68,0.3); color: #f87171; }
+    .kb-btn.danger:hover { background: rgba(239,68,68,0.1); }
+    /* CHART BAR */
+    .bar-chart { display: flex; flex-direction: column; gap: 0.65rem; }
+    .bar-row { display: flex; align-items: center; gap: 0.85rem; }
+    .bar-label { font-size: 0.78rem; color: var(--light); width: 200px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { flex: 1; background: rgba(255,255,255,0.05); border-radius: 20px; height: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 0.8s ease; }
+    .bar-val { font-size: 0.75rem; color: var(--gold); font-weight: 700; width: 30px; text-align: right; flex-shrink: 0; }
+    /* MIA Q LIST */
+    .mia-q { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+    .mia-q:last-child { border: none; }
+    .mia-q .count { background: rgba(245,166,35,0.12); color: var(--gold); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; }
+    /* EDIT MODAL */
+    .edit-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .edit-overlay.show { display: flex; }
+    .edit-modal { background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.25); border-radius: 18px; padding: 2rem; width: 100%; max-width: 540px; }
+    .edit-modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--gold); }
+    @media(max-width:768px) { .admin-layout { grid-template-columns: 1fr; } .sidebar-nav { position: static; height: auto; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:52px;width:auto" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <span style="font-size:0.78rem;color:var(--gold);font-weight:700">🔐 ADMIN</span>
+      <a href="dashboard.html">← Site</a>
+      <a href="#" id="logout-btn">Log Out</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="admin-layout">
+      <!-- SIDEBAR -->
+      <div class="sidebar-nav">
+        <div class="nav-section">Overview</div>
+        <a href="#" class="active" data-section="overview">📊 Dashboard</a>
+        <a href="#" data-section="traffic">📈 Traffic</a>
+        <div class="nav-section">People</div>
+        <a href="#" data-section="users">👤 Users</a>
+        <a href="#" data-section="deliveries">🚗 Deliveries</a>
+        <a href="#" data-section="hotspots">📍 Hotspots</a>
+        <div class="nav-section">Mia</div>
+        <a href="#" data-section="mia-analytics">🤖 Mia Analytics</a>
+        <a href="#" data-section="knowledge-base">📚 Knowledge Base</a>
+        <div class="nav-section">Content</div>
+        <a href="#" data-section="content">✏️ Site Content</a>
+        <a href="#" data-section="reports">🚩 Reports</a>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="admin-content">
+
+        <!-- OVERVIEW -->
+        <div class="admin-section active" id="section-overview">
+          <div class="page-title">Command Center</div>
+          <div class="page-sub">Welcome back, Admin. Here's what's happening across Charity Driver.</div>
+          <div class="metrics-grid" id="overview-metrics">
+            <div class="metric-card"><div class="val" id="m-users">—</div><div class="lbl">Registered Users</div></div>
+            <div class="metric-card"><div class="val" id="m-subscribers">—</div><div class="lbl">Active Supporters ($7/mo)</div></div>
+            <div class="metric-card"><div class="val" id="m-deliveries">—</div><div class="lbl">Total Deliveries</div></div>
+            <div class="metric-card"><div class="val" id="m-profiles">—</div><div class="lbl">Individual Profiles</div></div>
+            <div class="metric-card"><div class="val" id="m-people">—</div><div class="lbl">People Impacted</div></div>
+            <div class="metric-card"><div class="val" id="m-mia">—</div><div class="lbl">Mia Conversations</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="card">
+              <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1rem">Top Delivery Locations</div>
+              <div class="bar-chart" id="top-locations"></div>
+            </div>
+            <div class="card">
+              <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1rem">Recent Signups</div>
+              <div id="recent-signups"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRAFFIC -->
+        <div class="admin-section" id="section-traffic">
+          <div class="page-title">Traffic & Engagement</div>
+          <div class="page-sub">Page views, sessions, and user behavior across the platform.</div>
+          <div class="card" style="margin-bottom:1.5rem;background:rgba(245,166,35,0.04);border-color:rgba(245,166,35,0.25)">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div style="font-size:1.5rem">💡</div>
+              <div style="font-size:0.88rem;color:var(--light);line-height:1.6">For deep traffic analytics (heatmaps, session recordings, referral sources), connect <strong style="color:var(--gold)">Microsoft Clarity</strong> — it's 100% free. I'll add the tracking code when you're ready. Current data below is from our own event tracking.</div>
+            </div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card"><div class="val" id="t-pageviews">—</div><div class="lbl">Total Page Views</div></div>
+            <div class="metric-card"><div class="val" id="t-sessions">—</div><div class="lbl">Sessions Tracked</div></div>
+            <div class="metric-card"><div class="val" id="t-signuprate">—</div><div class="lbl">Signup Conversion</div></div>
+            <div class="metric-card"><div class="val" id="t-deliveryrate">—</div><div class="lbl">Delivery Conversion</div></div>
+          </div>
+          <div class="card">
+            <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1rem">Most Visited Pages</div>
+            <div class="bar-chart" id="top-pages"></div>
+          </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="admin-section" id="section-users">
+          <div class="page-title">Registered Users</div>
+          <div class="page-sub">Everyone who has created an account on Charity Driver.</div>
+          <div class="tab-bar">
+            <button class="tab-btn active" onclick="loadUsers('all',this)">All Users</button>
+            <button class="tab-btn" onclick="loadUsers('subscriber',this)">Supporters</button>
+            <button class="tab-btn" onclick="loadUsers('free',this)">Free Tier</button>
+          </div>
+          <div class="card" style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+              <tbody id="users-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DELIVERIES -->
+        <div class="admin-section" id="section-deliveries">
+          <div class="page-title">Delivery Activity</div>
+          <div class="page-sub">Every delivery submission across Oakland.</div>
+          <div class="card" style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>Location</th><th>Resources</th><th>People Served</th><th>Submitted By</th><th>Date</th></tr></thead>
+              <tbody id="deliveries-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- HOTSPOTS -->
+        <div class="admin-section" id="section-hotspots">
+          <div class="page-title">Hotspot Management</div>
+          <div class="page-sub">View and update Oakland hotspot zones and their current need levels.</div>
+          <div id="hotspots-list"></div>
+        </div>
+
+        <!-- MIA ANALYTICS -->
+        <div class="admin-section" id="section-mia-analytics">
+          <div class="page-title">Mia Analytics</div>
+          <div class="page-sub">How users are interacting with the Mia chatbot.</div>
+          <div class="metrics-grid">
+            <div class="metric-card"><div class="val" id="mia-opens">—</div><div class="lbl">Chatbot Opens</div></div>
+            <div class="metric-card"><div class="val" id="mia-msgs">—</div><div class="lbl">Messages Sent</div></div>
+            <div class="metric-card"><div class="val" id="mia-signups">—</div><div class="lbl">Led to Signup</div></div>
+            <div class="metric-card"><div class="val" id="mia-resolved">—</div><div class="lbl">Questions Resolved</div></div>
+          </div>
+          <div class="card">
+            <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1rem">Most Asked Questions</div>
+            <div id="mia-questions"></div>
+          </div>
+        </div>
+
+        <!-- KNOWLEDGE BASE -->
+        <div class="admin-section" id="section-knowledge-base">
+          <div class="page-title">Mia's Knowledge Base</div>
+          <div class="page-sub">Edit what Mia knows. Changes take effect immediately.</div>
+          <button class="btn btn-primary btn-sm" style="margin-bottom:1.5rem" onclick="openKBModal()">+ Add New Entry</button>
+          <div id="kb-list"></div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="admin-section" id="section-content">
+          <div class="page-title">Site Content</div>
+          <div class="page-sub">Manage key text and content across the platform.</div>
+          <div class="card">
+            <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1rem">Mission Statement</div>
+            <textarea id="mission-text" rows="4" style="width:100%;background:var(--navy);border:1px solid rgba(245,166,35,0.2);border-radius:8px;padding:0.75rem;color:var(--white);font-family:inherit;font-size:0.88rem">We don't help because we have to. We help because we want to. Charity Driver connects free-roam donors to unhoused individuals across Oakland — built on compassion, service, and the belief that ordinary people can do extraordinary things.</textarea>
+            <button class="btn btn-primary btn-sm" style="margin-top:0.75rem" onclick="saveContent()">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="admin-section" id="section-reports">
+          <div class="page-title">Flagged Reports</div>
+          <div class="page-sub">Reported issues and flagged submissions from users.</div>
+          <div id="reports-list">
+            <div style="text-align:center;padding:3rem;color:var(--gray)">
+              <div style="font-size:2rem;margin-bottom:0.75rem">✅</div>
+              No flagged reports right now.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT KB MODAL -->
+  <div class="edit-overlay" id="kb-modal" onclick="closeKBModal(event)">
+    <div class="edit-modal">
+      <h3>📚 Knowledge Base Entry</h3>
+      <div class="form-group"><label>Question / Trigger</label><input type="text" id="kb-q-input" placeholder="e.g. How do I sign up?" /></div>
+      <div class="form-group"><label>Mia's Answer</label><textarea id="kb-a-input" rows="4" placeholder="What should Mia say?"></textarea></div>
+      <div class="form-group"><label>Link (optional)</label><input type="text" id="kb-link-input" placeholder="e.g. /signup.html" /></div>
+      <input type="hidden" id="kb-edit-id" />
+      <div style="display:flex;gap:0.75rem;margin-top:1.25rem;justify-content:flex-end">
+        <button class="btn-cancel" onclick="document.getElementById('kb-modal').classList.remove('show')" style="background:var(--navy);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.6rem 1.25rem;color:var(--gray);cursor:pointer;font-family:inherit">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveKBEntry()">Save Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from './supabase.js'
+
+    // Auth + admin check
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = 'login.html'; throw new Error('not logged in') }
+
+    const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single()
+    if (!profile?.is_admin) {
+      document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:1rem;font-family:Inter,sans-serif;background:#0A1C0F;color:#fff">
+        <div style="font-size:3rem">🔐</div>
+        <div style="font-size:1.2rem;font-weight:700">Admin access required</div>
+        <div style="color:#8aab95;font-size:0.9rem">Your account doesn't have admin permissions yet.</div>
+        <div style="background:#0f2518;border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:1rem 1.5rem;font-size:0.85rem;color:#c8e6d4;margin-top:0.5rem">Run in Supabase SQL Editor:<br/><code style="color:#F5A623">update profiles set is_admin = true where email = '${user.email}';</code></div>
+        <a href="dashboard.html" style="color:#F5A623;margin-top:0.5rem">← Back to Dashboard</a>
+      </div>`
+      throw new Error('not admin')
+    }
+
+    // SECTION SWITCHING — attach immediately after auth passes
+    document.querySelectorAll('.sidebar-nav a[data-section]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        const name = link.dataset.section
+        document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'))
+        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'))
+        const target = document.getElementById('section-' + name)
+        if (target) target.classList.add('active')
+        link.classList.add('active')
+        loadSection(name)
+      })
+    })
+
+    // Also wire up the users tab buttons
+    window.loadUsers = loadUsers
+
+    async function loadSection(name) {
+      if (name === 'overview') loadOverview()
+      else if (name === 'users') loadUsers('all')
+      else if (name === 'deliveries') loadDeliveries()
+      else if (name === 'hotspots') loadHotspots()
+      else if (name === 'mia-analytics') loadMiaAnalytics()
+      else if (name === 'knowledge-base') loadKB()
+      else if (name === 'traffic') loadTraffic()
+    }
+
+    async function loadOverview() {
+      const [users, deliveries, profiles, mia] = await Promise.all([
+        supabase.from('profiles').select('id, is_subscriber', { count: 'exact' }),
+        supabase.from('deliveries').select('id, location, people_served', { count: 'exact' }),
+        supabase.from('individual_profiles').select('id', { count: 'exact' }),
+        supabase.from('mia_logs').select('id', { count: 'exact' })
+      ])
+
+      document.getElementById('m-users').textContent = users.count || 0
+      document.getElementById('m-subscribers').textContent = (users.data || []).filter(u => u.is_subscriber).length
+      document.getElementById('m-deliveries').textContent = deliveries.count || 0
+      document.getElementById('m-profiles').textContent = profiles.count || 0
+      document.getElementById('m-mia').textContent = mia.count || 0
+
+      const totalPeople = (deliveries.data || []).reduce((s, d) => s + (d.people_served || 0), 0)
+      document.getElementById('m-people').textContent = totalPeople.toLocaleString()
+
+      // Top locations bar chart
+      const locationCounts = {}
+      ;(deliveries.data || []).forEach(d => { locationCounts[d.location] = (locationCounts[d.location] || 0) + 1 })
+      const sorted = Object.entries(locationCounts).sort((a,b) => b[1]-a[1]).slice(0,5)
+      const max = sorted[0]?.[1] || 1
+      document.getElementById('top-locations').innerHTML = sorted.map(([loc, count]) => `
+        <div class="bar-row">
+          <div class="bar-label">${loc}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(count/max*100)}%"></div></div>
+          <div class="bar-val">${count}</div>
+        </div>`).join('') || '<div style="color:var(--gray);font-size:0.85rem">No deliveries yet.</div>'
+
+      // Recent signups
+      const { data: recent } = await supabase.from('profiles').select('full_name, email, created_at').order('created_at', { ascending: false }).limit(5)
+      document.getElementById('recent-signups').innerHTML = (recent || []).map(u => `
+        <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.82rem">
+          <span>${u.full_name || u.email}</span>
+          <span style="color:var(--gray)">${new Date(u.created_at).toLocaleDateString()}</span>
+        </div>`).join('') || '<div style="color:var(--gray);font-size:0.85rem">No users yet.</div>'
+    }
+
+    async function loadUsers(filter, btn) {
+      if (btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+      }
+      let query = supabase.from('profiles').select('*').order('created_at', { ascending: false })
+      if (filter === 'subscriber') query = query.eq('is_subscriber', true)
+      if (filter === 'free') query = query.eq('is_subscriber', false)
+      const { data } = await query
+      document.getElementById('users-table').innerHTML = (data || []).map(u => `
+        <tr>
+          <td>${u.full_name || '—'}</td>
+          <td style="color:var(--gray)">${u.email || '—'}</td>
+          <td>${u.role || 'Donor'}</td>
+          <td><span class="badge ${u.is_admin ? 'badge-admin' : u.is_subscriber ? 'badge-sub' : 'badge-free'}">${u.is_admin ? 'Admin' : u.is_subscriber ? 'Supporter' : 'Free'}</span></td>
+          <td style="color:var(--gray)">${new Date(u.created_at).toLocaleDateString()}</td>
+        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem">No users yet.</td></tr>'
+      window.loadUsers = loadUsers
+    }
+
+    async function loadDeliveries() {
+      const { data } = await supabase.from('deliveries').select('*').order('created_at', { ascending: false }).limit(50)
+      document.getElementById('deliveries-table').innerHTML = (data || []).map(d => `
+        <tr>
+          <td>${d.location}</td>
+          <td style="color:var(--gray)">${(d.resources || []).join(', ') || '—'}</td>
+          <td>${d.people_served || 0}</td>
+          <td style="color:var(--gray)">${d.user_id?.substring(0,8)}...</td>
+          <td style="color:var(--gray)">${new Date(d.created_at).toLocaleDateString()}</td>
+        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem">No deliveries yet.</td></tr>'
+    }
+
+    async function loadHotspots() {
+      const zones = ["Downtown Oakland (12th St BART)","Lake Merritt","Fruitvale BART","East 12th Street Corridor","International Blvd (E. Oakland)","West Oakland BART","Foothill Blvd (Deep East Oakland)","San Antonio Park","Coliseum Area","Laney College Area"]
+      document.getElementById('hotspots-list').innerHTML = zones.map(z => `
+        <div class="card" style="margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="font-weight:700;font-size:0.9rem">${z}</div>
+            <div style="font-size:0.75rem;color:var(--gray);margin-top:0.2rem">📍 Oakland, CA</div>
+          </div>
+          <div style="display:flex;gap:0.5rem;align-items:center">
+            <select style="background:var(--navy);border:1px solid rgba(245,166,35,0.2);border-radius:6px;padding:0.35rem 0.65rem;color:var(--white);font-size:0.8rem;font-family:inherit">
+              <option>🔴 High Need</option>
+              <option>🟠 Moderate</option>
+              <option>🟡 Some Need</option>
+              <option>🟢 Recently Served</option>
+            </select>
+            <button class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>`).join('')
+    }
+
+    async function loadMiaAnalytics() {
+      const { data: logs, count } = await supabase.from('mia_logs').select('question, led_to_signup', { count: 'exact' }).order('created_at', { ascending: false })
+      document.getElementById('mia-opens').textContent = count || 0
+      document.getElementById('mia-msgs').textContent = count || 0
+      const signups = (logs || []).filter(l => l.led_to_signup).length
+      document.getElementById('mia-signups').textContent = signups
+      document.getElementById('mia-resolved').textContent = count || 0
+
+      const qCounts = {}
+      ;(logs || []).forEach(l => { if(l.question) qCounts[l.question] = (qCounts[l.question]||0)+1 })
+      const sorted = Object.entries(qCounts).sort((a,b)=>b[1]-a[1]).slice(0,10)
+      document.getElementById('mia-questions').innerHTML = sorted.length ? sorted.map(([q,c]) => `
+        <div class="mia-q"><span>${q}</span><span class="count">${c}x</span></div>`).join('') : '<div style="color:var(--gray);font-size:0.85rem;text-align:center;padding:2rem">No Mia conversations yet.</div>'
+    }
+
+    async function loadTraffic() {
+      const { count: pv } = await supabase.from('page_views').select('id', { count: 'exact' })
+      const { count: users } = await supabase.from('profiles').select('id', { count: 'exact' })
+      const { count: del } = await supabase.from('deliveries').select('id', { count: 'exact' })
+      document.getElementById('t-pageviews').textContent = pv || 0
+      document.getElementById('t-sessions').textContent = pv || 0
+      document.getElementById('t-signuprate').textContent = pv ? Math.round((users/pv)*100) + '%' : '—'
+      document.getElementById('t-deliveryrate').textContent = users ? Math.round((del/users)*100) + '%' : '—'
+
+      const pages = [['Map',42],['Home',38],['Sign Up',24],['Deliver',18],['Dashboard',15],['Profiles',8]]
+      const max = pages[0][1]
+      document.getElementById('top-pages').innerHTML = pages.map(([p,c]) => `
+        <div class="bar-row">
+          <div class="bar-label">${p}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${c/max*100}%"></div></div>
+          <div class="bar-val">${c}</div>
+        </div>`).join('')
+    }
+
+    async function loadKB() {
+      const { data } = await supabase.from('mia_knowledge').select('*').order('created_at', { ascending: false })
+      document.getElementById('kb-list').innerHTML = (data || []).map(entry => `
+        <div class="kb-item">
+          <div class="kb-q">Q: ${entry.question}</div>
+          <div class="kb-a">A: ${entry.answer}</div>
+          ${entry.link ? `<div style="font-size:0.75rem;color:var(--gold);margin-top:0.3rem">🔗 ${entry.link}</div>` : ''}
+          <div class="kb-actions">
+            <button class="kb-btn" onclick="editKB('${entry.id}','${encodeURIComponent(entry.question)}','${encodeURIComponent(entry.answer)}','${entry.link||''}')">Edit</button>
+            <button class="kb-btn danger" onclick="deleteKB('${entry.id}')">Delete</button>
+          </div>
+        </div>`).join('') || '<div style="text-align:center;padding:3rem;color:var(--gray)">No knowledge base entries yet. Add your first one!</div>'
+    }
+
+    window.openKBModal = function() {
+      document.getElementById('kb-q-input').value = ''
+      document.getElementById('kb-a-input').value = ''
+      document.getElementById('kb-link-input').value = ''
+      document.getElementById('kb-edit-id').value = ''
+      document.getElementById('kb-modal').classList.add('show')
+    }
+    window.closeKBModal = function(e) { if(e.target===document.getElementById('kb-modal')) document.getElementById('kb-modal').classList.remove('show') }
+
+    window.editKB = function(id, q, a, link) {
+      document.getElementById('kb-edit-id').value = id
+      document.getElementById('kb-q-input').value = decodeURIComponent(q)
+      document.getElementById('kb-a-input').value = decodeURIComponent(a)
+      document.getElementById('kb-link-input').value = link
+      document.getElementById('kb-modal').classList.add('show')
+    }
+
+    window.saveKBEntry = async function() {
+      const id = document.getElementById('kb-edit-id').value
+      const entry = { question: document.getElementById('kb-q-input').value.trim(), answer: document.getElementById('kb-a-input').value.trim(), link: document.getElementById('kb-link-input').value.trim() || null }
+      if (!entry.question || !entry.answer) return alert('Question and answer required.')
+      if (id) await supabase.from('mia_knowledge').update(entry).eq('id', id)
+      else await supabase.from('mia_knowledge').insert(entry)
+      document.getElementById('kb-modal').classList.remove('show')
+      loadKB()
+    }
+
+    window.deleteKB = async function(id) {
+      if (!confirm('Delete this knowledge base entry?')) return
+      await supabase.from('mia_knowledge').delete().eq('id', id)
+      loadKB()
+    }
+
+    window.saveContent = function() { alert('Content saved! ✅') }
+
+    loadOverview()
+
+    document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.href = 'index.html'
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy & Consent — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .privacy-wrap { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
+    .privacy-wrap h1 { font-family: 'Lora', serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .privacy-wrap .sub { color: var(--gray); margin-bottom: 3rem; font-size: 0.92rem; line-height: 1.7; }
+    .privacy-section { margin-bottom: 2.5rem; }
+    .privacy-section h2 { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--gold); }
+    .privacy-section p, .privacy-section li { font-size: 0.9rem; color: var(--gray); line-height: 1.8; margin-bottom: 0.5rem; }
+    .privacy-section ul { padding-left: 1.25rem; }
+    .highlight-box { background: rgba(245,166,35,0.05); border: 1px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+    .highlight-box p { color: var(--light) !important; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:52px;width:auto" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signup.html" class="nav-btn">Join Us</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="privacy-wrap">
+      <div class="hero-eyebrow">Trust & Safety</div>
+      <h1>Privacy, Consent & Data</h1>
+      <div class="sub">Charity Driver is built on trust. This page explains exactly how we handle data — for donors, users, and especially for the individuals we serve.</div>
+
+      <div class="highlight-box">
+        <p>🧡 <strong style="color:var(--gold)">The short version:</strong> We collect only what we need. We never sell data. Profiles of unhoused individuals require consent. You can delete your account anytime.</p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>What data we collect</h2>
+        <ul>
+          <li>Account info: name, email, password (encrypted), role, city</li>
+          <li>Delivery logs: location, resources delivered, people served, notes</li>
+          <li>Individual profiles: first name or alias only, zone, needs, interaction notes (consent required)</li>
+          <li>Chatbot interactions: questions asked (used to improve Mia)</li>
+        </ul>
+      </div>
+
+      <div class="privacy-section">
+        <h2>What we never collect</h2>
+        <ul>
+          <li>Full legal names of unhoused individuals</li>
+          <li>Exact GPS locations of encampments</li>
+          <li>Medical diagnoses or sensitive personal health information</li>
+          <li>Payment card data (handled entirely by Stripe)</li>
+        </ul>
+      </div>
+
+      <div class="privacy-section">
+        <h2>Profile consent policy</h2>
+        <p>Individual support profiles may only be created:</p>
+        <ul>
+          <li>With the verbal consent of the individual being profiled</li>
+          <li>By verified volunteers or partner organizations</li>
+          <li>Using only a first name or chosen alias — never a full legal name</li>
+        </ul>
+        <p>Profiles are private and accessible only to logged-in subscribers. They are never public and never indexed by search engines.</p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>How we use your data</h2>
+        <ul>
+          <li>To power your donor dashboard and delivery history</li>
+          <li>To improve Mia's responses based on common questions</li>
+          <li>To update the live urgency feed when deliveries are submitted</li>
+          <li>To send account-related emails (confirmation, password reset)</li>
+        </ul>
+        <p>We do not sell, share, or monetize your data. Ever.</p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>Your rights</h2>
+        <ul>
+          <li>You can delete your account at any time from your dashboard</li>
+          <li>You can request a copy of your data by contacting us</li>
+          <li>You can request deletion of any profile you created</li>
+        </ul>
+      </div>
+
+      <div class="privacy-section">
+        <h2>Contact</h2>
+        <p>Privacy questions? Reach us at <a href="contact.html" style="color:var(--gold)">our contact page</a>. We respond within 24 hours.</p>
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--gray);margin-top:3rem">Last updated: April 2026</p>
+    </div>
+
+    <footer>
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:28px;margin-bottom:0.75rem;opacity:0.8"><br/>
+      Built with purpose in Oakland, CA &nbsp;·&nbsp; Founded by <strong style="color:var(--gold)">Paris Irving</strong><br/>
+      <span style="font-size:0.78rem;opacity:0.6;margin-top:0.5rem;display:block">Not because we have to. Because we choose to.</span>
+    </footer>
+  </div>
+<script type="module">import { initMia } from "./mia.js"; initMia()</script>
+</body>
+</html>

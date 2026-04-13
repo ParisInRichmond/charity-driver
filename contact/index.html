@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact & Partner — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding: 4rem 0; align-items: flex-start; }
+    .contact-grid h1 { font-family: 'Lora', serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .contact-grid .sub { color: var(--gray); line-height: 1.8; margin-bottom: 2rem; font-size: 0.92rem; }
+    .contact-option { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+    .contact-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+    .contact-option h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .contact-option p { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+    .partner-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25); border-radius: 20px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; }
+    @media(max-width:768px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 0; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:52px;width:auto" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="map.html">Map</a>
+      <a href="signup.html" class="nav-btn">Join Us</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <div class="hero-eyebrow">Get In Touch</div>
+          <h1>Let's build this together.</h1>
+          <div class="sub">Whether you're an individual donor, a nonprofit, a government partner, or a funder — we want to hear from you. Charity Driver is built for collaboration.</div>
+
+          <div class="contact-option">
+            <div class="contact-icon">🤝</div>
+            <div>
+              <h4>Nonprofit & Organization Partners</h4>
+              <p>Already working with Oakland's unhoused community? Let's connect our networks and multiply our impact.</p>
+            </div>
+          </div>
+          <div class="contact-option">
+            <div class="contact-icon">🏛️</div>
+            <div>
+              <h4>Government & Funding Partners</h4>
+              <p>Looking for tech-enabled community solutions? Charity Driver is built to scale with the right support.</p>
+            </div>
+          </div>
+          <div class="contact-option">
+            <div class="contact-icon">💬</div>
+            <div>
+              <h4>General Support</h4>
+              <p>Questions about your account, deliveries, or the platform? We'll get back to you within 24 hours.</p>
+            </div>
+          </div>
+          <div class="contact-option">
+            <div class="contact-icon">📣</div>
+            <div>
+              <h4>Press & Media</h4>
+              <p>Covering Oakland, homelessness, or civic tech? We'd love to share our story.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="partner-badge">✉️ Send us a message</div>
+          <div class="card">
+            <div id="contact-error" class="error-msg"></div>
+            <div id="contact-success" class="success-msg"></div>
+            <form id="contact-form">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+                <div class="form-group"><label>First Name</label><input type="text" id="c-first" placeholder="Paris" required /></div>
+                <div class="form-group"><label>Last Name</label><input type="text" id="c-last" placeholder="Irving" required /></div>
+              </div>
+              <div class="form-group"><label>Email</label><input type="email" id="c-email" placeholder="paris@example.com" required /></div>
+              <div class="form-group">
+                <label>I am a...</label>
+                <select id="c-type">
+                  <option>Individual Donor</option>
+                  <option>Nonprofit Organization</option>
+                  <option>Government / City Agency</option>
+                  <option>Funder / Investor</option>
+                  <option>Press / Media</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Organization (if applicable)</label>
+                <input type="text" id="c-org" placeholder="Organization name" />
+              </div>
+              <div class="form-group">
+                <label>Message *</label>
+                <textarea id="c-message" rows="4" placeholder="Tell us how you'd like to connect or what you need help with..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%" id="c-btn">Send Message →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:28px;margin-bottom:0.75rem;opacity:0.8"><br/>
+      Built with purpose in Oakland, CA &nbsp;·&nbsp; Founded by <strong style="color:var(--gold)">Paris Irving</strong><br/>
+      <span style="font-size:0.78rem;opacity:0.6;margin-top:0.5rem;display:block">Not because we have to. Because we choose to.</span>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { supabase } from './supabase.js'
+
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = document.getElementById('c-btn')
+      const errorEl = document.getElementById('contact-error')
+      const successEl = document.getElementById('contact-success')
+      errorEl.style.display = 'none'
+      btn.textContent = 'Sending...'
+      btn.style.opacity = '0.7'
+      btn.style.pointerEvents = 'none'
+
+      const firstName = document.getElementById('c-first').value.trim()
+      const lastName = document.getElementById('c-last').value.trim()
+      const email = document.getElementById('c-email').value.trim()
+      const type = document.getElementById('c-type').value
+      const org = document.getElementById('c-org').value.trim()
+      const message = document.getElementById('c-message').value.trim()
+
+      // 1. Save to Supabase
+      await supabase.from('contact_submissions').insert({
+        first_name: firstName, last_name: lastName,
+        email, type, organization: org, message
+      })
+
+      // 2. Send email notification via Formsubmit (free, no signup)
+      try {
+        const formData = new FormData()
+        formData.append('name', `${firstName} ${lastName}`)
+        formData.append('email', email)
+        formData.append('_subject', `🧡 New Charity Driver inquiry from ${firstName} (${type})`)
+        formData.append('message', `Type: ${type}\nOrg: ${org || 'N/A'}\nEmail: ${email}\n\nMessage:\n${message}`)
+        formData.append('_captcha', 'false')
+        formData.append('_template', 'table')
+
+        await fetch('https://formsubmit.co/paris@hiddengeniusproject.org', {
+          method: 'POST',
+          body: formData
+        })
+      } catch(err) {
+        // Email failed silently — Supabase still saved it
+        console.warn('Email notification failed:', err)
+      }
+
+      successEl.textContent = '\u2705 Message sent! We\'ll be in touch within 24 hours.'
+      successEl.style.display = 'block'
+      document.getElementById('contact-form').reset()
+      btn.textContent = 'Send Message →'
+      btn.style.opacity = '1'
+      btn.style.pointerEvents = 'auto'
+    })
+  </script>
+<script type="module">import { initMia } from "./mia.js"; initMia()</script>
+</body>
+</html>

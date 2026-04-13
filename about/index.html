@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .about-hero { padding: 5rem 0 3rem; text-align: center; }
+    .about-hero h1 { font-family: 'Lora', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 1rem; }
+    .about-hero p { color: var(--gray); font-size: 1.05rem; line-height: 1.8; max-width: 600px; margin: 0 auto; }
+    .founder { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; margin: 3rem 0; }
+    .founder-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, rgba(245,166,35,0.3), rgba(245,166,35,0.08)); border: 3px solid rgba(245,166,35,0.4); display: flex; align-items: center; justify-content: center; font-size: 3rem; flex-shrink: 0; }
+    .founder h2 { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .founder .title { font-size: 0.82rem; color: var(--gold); margin-bottom: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .founder p { color: var(--gray); font-size: 0.92rem; line-height: 1.8; }
+    .values-section { background: var(--navy-mid); }
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+    .value-item { text-align: center; padding: 1.5rem; }
+    .value-icon { font-size: 2.2rem; margin-bottom: 0.85rem; }
+    .value-item h3 { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .value-item p { font-size: 0.82rem; color: var(--gray); line-height: 1.7; }
+    .quote-block { background: rgba(245,166,35,0.04); border-left: 4px solid var(--gold); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 3rem 0; }
+    .quote-block blockquote { font-family: 'Lora', serif; font-size: 1.2rem; font-style: italic; line-height: 1.7; color: var(--light); }
+    .quote-block cite { display: block; font-size: 0.82rem; color: var(--gold); margin-top: 0.75rem; font-style: normal; font-weight: 700; }
+    @media(max-width:600px) { .founder { grid-template-columns: 1fr; text-align: center; } .founder-avatar { margin: 0 auto; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:52px;width:auto" />
+      <span class="nav-logo-text">Charity <span>Driver</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="map.html">Map</a>
+      <a href="pitch-deck.html">Our Pitch 🎥</a>
+      <a href="contact.html">Partner</a>
+      <a href="login.html">Log In</a>
+      <a href="signup.html" class="nav-btn">Join Us</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="about.html">About</a>
+    <a href="map.html">Map</a>
+    <a href="pitch-deck.html">Our Pitch 🎥</a>
+    <a href="contact.html">Partner</a>
+    <a href="login.html">Log In</a>
+    <a href="signup.html" class="nav-btn">Join Us</a>
+  </div>
+  <script>function toggleMenu(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobile-menu').classList.toggle('open')}</script>
+
+  <div class="page">
+    <section class="about-hero">
+      <div class="container">
+        <div class="hero-eyebrow">Our Story</div>
+        <h1>Built in Oakland.<br/>Rooted in love.</h1>
+        <p>Charity Driver didn't come from a boardroom. It came from someone who grew up watching their community struggle — and decided to do something about it.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="founder card">
+          <div class="founder-avatar" style="overflow:hidden;padding:0">
+            <img src="paris.png" alt="Paris Irving" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+          </div>
+          <div>
+            <h2>Paris Irving</h2>
+            <div class="title">Founder · Innovation Educator · Oakland Native</div>
+            <p>Paris Irving grew up in East Oakland — a city full of brilliance and resilience, but also real, visible need. As an alumnus and educator at The Hidden Genius Project, Paris has spent years teaching Black male youth that technology can be a tool for change. Charity Driver is that belief in action: using technology not to impress, but to serve.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"I didn't build this because I had to. I built it because I kept driving past the same people every day and thinking — someone should do something. Then I realized that someone was me."</blockquote>
+          <cite>— Paris Irving, Founder</cite>
+        </div>
+
+        <div style="max-width:700px">
+          <div class="section-title">Why Charity Driver exists</div>
+          <p style="color:var(--gray);line-height:1.8;margin-top:1rem;font-size:0.95rem">Oakland has one of the highest rates of homelessness in the country. But beyond the statistics are real people — with names, stories, and daily needs that systems alone can't meet. Charity Driver was built on a simple belief: that ordinary people, choosing to show up with a meal or a blanket, can do what institutions can't. They can make someone feel <em style="color:var(--white)">seen</em>.</p>
+          <p style="color:var(--gray);line-height:1.8;margin-top:1rem;font-size:0.95rem">This platform is not about charity as obligation. It's about love as action. The kind that gives without keeping score. The kind that shows up even when it costs something.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section values-section">
+      <div class="container">
+        <div class="section-title" style="text-align:center">What we stand for</div>
+        <div class="values-grid">
+          <div class="value-item card">
+            <div class="value-icon">❤️</div>
+            <h3>Compassion</h3>
+            <p>Every person on these streets has a name, a story, and dignity. We start from that truth — always.</p>
+          </div>
+          <div class="value-item card">
+            <div class="value-icon">🙌</div>
+            <h3>Service</h3>
+            <p>Not a transaction. Not a PR moment. Just showing up with what someone needs, because you can.</p>
+          </div>
+          <div class="value-item card">
+            <div class="value-icon">🔥</div>
+            <h3>Devotion</h3>
+            <p>We don't stop when it's inconvenient. Oakland needs people who stay committed through every season.</p>
+          </div>
+          <div class="value-item card">
+            <div class="value-icon">🛡️</div>
+            <h3>Dignity</h3>
+            <p>Every feature we build — especially the profile system — is designed to honor, not expose. Privacy and respect are non-negotiable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" style="text-align:center">
+        <div class="section-title">Ready to be part of this?</div>
+        <p style="color:var(--gray);margin:1rem auto 2rem;max-width:460px;line-height:1.8">You don't need a reason beyond this: someone out there needs what you have to give.</p>
+        <a href="signup.html" class="btn btn-primary">Join Charity Driver →</a>
+        &nbsp;&nbsp;
+        <a href="contact.html" class="btn btn-outline">Partner With Us</a>
+      </div>
+    </section>
+
+    <footer>
+      <img src="charitydriver-sm.png" alt="Charity Driver" style="height:28px;margin-bottom:0.75rem;opacity:0.8"><br/>
+      Built with purpose in Oakland, CA &nbsp;·&nbsp; Founded by <strong style="color:var(--gold)">Paris Irving</strong><br/>
+      <span style="font-size:0.78rem;opacity:0.6;margin-top:0.5rem;display:block">Not because we have to. Because we choose to.</span>
+    </footer>
+  </div>
+<script type="module">import { initMia } from "./mia.js"; initMia()</script>
+</body>
+</html>

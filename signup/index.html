@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — Charity Driver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lora:wght@400;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem 3rem; }
+    .auth-box { background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.2); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 480px; }
+    .auth-box h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .auth-box .sub { color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem; }
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .role-card { border: 2px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .role-card:hover, .role-card.selected { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+    .role-card .icon { font-size: 1.75rem; margin-bottom: 0.4rem; }
+    .role-card .title { font-size: 0.8rem; font-weight: 700; }
+    .role-card .desc { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+    .divider { text-align: center; color: var(--gray); font-size: 0.8rem; margin: 1.25rem 0; position: relative; }
+    .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.1); }
+    .divider span { background: var(--navy-mid); padding: 0 1rem; position: relative; }
+    .login-link { text-align: center; font-size: 0.85rem; color: var(--gray); margin-top: 1.25rem; }
+    .login-link a { color: var(--gold); font-weight: 600; text-decoration: none; }
+    .error-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.85rem; color: #f87171; margin-bottom: 1rem; display: none; }
+    .success-msg { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.85rem; color: #34d399; margin-bottom: 1rem; display: none; }
+    .btn-loading { opacity: 0.7; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Charity Driver 🧡</a>
+    <div class="nav-links">
+      <a href="map.html">Map</a>
+      <a href="guest.html">Browse</a>
+      <a href="login.html">Log In</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="auth-wrap">
+      <div class="auth-box">
+        <h1>Join Charity Driver</h1>
+        <div class="sub">Create your free account and start making an impact in Oakland.</div>
+
+        <div id="error-msg" class="error-msg"></div>
+        <div id="success-msg" class="success-msg"></div>
+
+        <div style="margin-bottom:1.25rem">
+          <label style="font-size:0.85rem;font-weight:700;color:var(--light);display:block;margin-bottom:0.75rem">I want to join as a...</label>
+          <div class="role-grid">
+            <div class="role-card selected" onclick="selectRole(this,'Free-Roam Donor')">
+              <div class="icon">🚗</div>
+              <div class="title">Free-Roam Donor</div>
+              <div class="desc">Deliver supplies on your schedule</div>
+            </div>
+            <div class="role-card" onclick="selectRole(this,'Community Partner')">
+              <div class="icon">🤝</div>
+              <div class="title">Community Partner</div>
+              <div class="desc">Org or nonprofit partner</div>
+            </div>
+            <div class="role-card" onclick="selectRole(this,'Volunteer')">
+              <div class="icon">💛</div>
+              <div class="title">Volunteer</div>
+              <div class="desc">Help coordinate efforts</div>
+            </div>
+          </div>
+        </div>
+
+        <form id="signup-form">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+            <div class="form-group"><label>First Name</label><input type="text" id="first-name" placeholder="Paris" required /></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="last-name" placeholder="Irving" required /></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" id="email" placeholder="paris@example.com" required /></div>
+          <div class="form-group">
+            <label>Password</label>
+            <div style="position:relative">
+              <input type="password" id="password" placeholder="At least 6 characters" required style="padding-right:2.5rem"/>
+              <span onclick="togglePass('password','eye1')" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1.1rem;user-select:none" id="eye1">👁️</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <div style="position:relative">
+              <input type="password" id="password-confirm" placeholder="Repeat your password" required style="padding-right:2.5rem"/>
+              <span onclick="togglePass('password-confirm','eye2')" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1.1rem;user-select:none" id="eye2">👁️</span>
+            </div>
+          </div>
+          <div class="form-group"><label>City</label><input type="text" id="city" placeholder="Oakland, CA" value="Oakland, CA" /></div>
+          <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%;margin-top:0.5rem">Create My Account →</button>
+        </form>
+
+        <div class="divider"><span>or</span></div>
+        <a href="guest.html" class="btn btn-outline" style="width:100%;text-align:center;display:block">Continue as Guest</a>
+        <div class="login-link">Already have an account? <a href="login.html">Log in</a></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase, redirectIfLoggedIn } from './supabase.js'
+
+    // Redirect if already logged in
+    redirectIfLoggedIn()
+
+    let selectedRole = 'Free-Roam Donor'
+
+    window.togglePass = function(fieldId, eyeId) {
+      const input = document.getElementById(fieldId)
+      const eye = document.getElementById(eyeId)
+      if (input.type === 'password') {
+        input.type = 'text'
+        eye.textContent = '🙈'
+      } else {
+        input.type = 'password'
+        eye.textContent = '👁️'
+      }
+    }
+
+    window.selectRole = function(el, role) {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'))
+      el.classList.add('selected')
+      selectedRole = role
+    }
+
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const btn = document.getElementById('submit-btn')
+      const errorEl = document.getElementById('error-msg')
+      const successEl = document.getElementById('success-msg')
+      errorEl.style.display = 'none'
+      successEl.style.display = 'none'
+      btn.textContent = 'Creating account...'
+      btn.classList.add('btn-loading')
+
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+      const confirm = document.getElementById('password-confirm').value
+
+      if (password !== confirm) {
+        errorEl.textContent = 'Passwords do not match. Please try again.'
+        errorEl.style.display = 'block'
+        btn.textContent = 'Create My Account →'
+        btn.classList.remove('btn-loading')
+        return
+      }
+      if (password.length < 6) {
+        errorEl.textContent = 'Password must be at least 6 characters.'
+        errorEl.style.display = 'block'
+        btn.textContent = 'Create My Account →'
+        btn.classList.remove('btn-loading')
+        return
+      }
+      const firstName = document.getElementById('first-name').value.trim()
+      const lastName = document.getElementById('last-name').value.trim()
+      const city = document.getElementById('city').value.trim()
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            full_name: `${firstName} ${lastName}`,
+            role: selectedRole,
+            city
+          }
+        }
+      })
+
+      if (error) {
+        errorEl.textContent = error.message
+        errorEl.style.display = 'block'
+        btn.textContent = 'Create My Account →'
+        btn.classList.remove('btn-loading')
+        return
+      }
+
+      // Save profile to profiles table
+      if (data.user) {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
+          role: selectedRole,
+          city,
+          email
+        })
+        window.location.href = 'dashboard.html'
+      } else {
+        // Email confirmation required
+        successEl.textContent = '✅ Check your email to confirm your account, then log in.'
+        successEl.style.display = 'block'
+        btn.textContent = 'Create My Account →'
+        btn.classList.remove('btn-loading')
+      }
+    })
+  </script>
+</body>
+</html>
