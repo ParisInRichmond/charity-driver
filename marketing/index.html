@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paris's Marketing Empire 🔥</title>
+<style>
+  :root {
+    --green: #00c853;
+    --dark-green: #00963f;
+    --bg: #0a0a0a;
+    --card: #111;
+    --card2: #1a1a1a;
+    --border: #222;
+    --text: #f0f0f0;
+    --muted: #888;
+    --gold: #ffd600;
+    --red: #ff4444;
+    --blue: #2979ff;
+    --purple: #9c27b0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #0a1a0a 0%, #001a0d 100%); border-bottom: 1px solid var(--green); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .header h1 { font-size: 1.4rem; color: var(--green); font-weight: 800; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--text); }
+  .xp-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .xp-label { font-size: 0.75rem; color: var(--green); font-weight: 700; white-space: nowrap; }
+  .xp-bar { width: 180px; height: 10px; background: #222; border-radius: 10px; overflow: hidden; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); border-radius: 10px; transition: width 0.8s ease; }
+  .level-badge { background: var(--green); color: #000; font-weight: 900; font-size: 0.7rem; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; padding: 16px 24px 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .tab { padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--border); border-bottom: none; white-space: nowrap; transition: all 0.2s; }
+  .tab.active { color: var(--green); background: var(--card2); border-color: var(--green); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* MAIN */
+  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .card-value { font-size: 1.8rem; font-weight: 800; color: var(--green); }
+  .card-sub { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+  /* GRID */
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+  /* PHASE ROADMAP */
+  .roadmap { display: flex; flex-direction: column; gap: 12px; }
+  .phase { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; }
+  .phase:hover { border-color: var(--green); }
+  .phase.active-phase { border-color: var(--green); background: #0d1f0d; }
+  .phase.done { border-color: var(--dark-green); opacity: 0.7; }
+  .phase-header { display: flex; align-items: center; gap: 12px; }
+  .phase-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; flex-shrink: 0; }
+  .phase-num.done { background: var(--green); color: #000; }
+  .phase-num.active { background: var(--gold); color: #000; }
+  .phase-num.locked { background: var(--border); color: var(--muted); }
+  .phase-info h3 { font-size: 0.95rem; font-weight: 700; }
+  .phase-info p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .phase-badge { margin-left: auto; font-size: 0.7rem; padding: 3px 8px; border-radius: 20px; font-weight: 700; }
+  .badge-active { background: rgba(255,214,0,0.15); color: var(--gold); }
+  .badge-done { background: rgba(0,200,83,0.15); color: var(--green); }
+  .badge-locked { background: rgba(136,136,136,0.1); color: var(--muted); }
+  .phase-tasks { margin-top: 12px; display: none; }
+  .phase.open .phase-tasks { display: block; }
+  .task-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .task-item:last-child { border-bottom: none; }
+  .task-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .task-check.checked { background: var(--green); border-color: var(--green); }
+  .task-check.checked::after { content: '✓'; font-size: 11px; color: #000; font-weight: 900; }
+  .task-text { font-size: 0.82rem; flex: 1; }
+  .task-text.done { text-decoration: line-through; color: var(--muted); }
+  .task-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
+  .tag-free { background: rgba(0,200,83,0.15); color: var(--green); }
+  .tag-paid { background: rgba(41,121,255,0.15); color: var(--blue); }
+  .tag-content { background: rgba(156,33,176,0.15); color: #ce93d8; }
+
+  /* KPI TRACKER */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .kpi-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .kpi-input-wrap { display: flex; gap: 6px; align-items: center; }
+  .kpi-input { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 1rem; font-weight: 700; width: 100%; outline: none; }
+  .kpi-input:focus { border-color: var(--green); }
+  .kpi-prev { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+  .kpi-delta { font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
+  .delta-up { color: var(--green); }
+  .delta-down { color: var(--red); }
+  .save-btn { background: var(--green); color: #000; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+  .save-btn:hover { background: var(--dark-green); }
+  .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .log-table th { text-align: left; padding: 8px 10px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+  .log-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .log-table tr:last-child td { border-bottom: none; }
+
+  /* PRODUCTS */
+  .product-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .product-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .product-rank { font-size: 0.65rem; background: rgba(255,214,0,0.15); color: var(--gold); padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+  .product-stat { display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 6px; }
+  .product-stat span:first-child { color: var(--muted); }
+  .product-stat span:last-child { font-weight: 600; }
+  .product-bar { height: 4px; background: var(--border); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+  .product-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--green), var(--gold)); }
+
+  /* STRATEGY */
+  .lane-card { background: linear-gradient(135deg, #0d1f0d, #001208); border: 1px solid var(--green); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .lane-card h2 { color: var(--green); font-size: 1.1rem; margin-bottom: 12px; }
+  .lane-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 0.82rem; }
+  .lane-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+  /* SECTION HEADER */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-size: 1rem; font-weight: 800; }
+  .section-sub { font-size: 0.75rem; color: var(--muted); }
+
+  /* PROGRESS RING */
+  .progress-ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .progress-ring-label { font-size: 0.7rem; color: var(--muted); text-align: center; }
+  .progress-ring-val { font-size: 0.85rem; font-weight: 700; color: var(--green); }
+
+  /* ALERTS */
+  .alert { border-radius: 8px; padding: 12px 16px; font-size: 0.82rem; margin-bottom: 12px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-gold { background: rgba(255,214,0,0.08); border: 1px solid rgba(255,214,0,0.3); color: #ffe066; }
+  .alert-green { background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.3); color: #69f0ae; }
+  .alert-blue { background: rgba(41,121,255,0.08); border: 1px solid rgba(41,121,255,0.3); color: #82b1ff; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header h1" style="font-size:1.4rem;color:#00c853;font-weight:800;">Paris's <span style="color:#f0f0f0;">Marketing Empire</span> 🔥</div>
+    <div style="font-size:0.72rem;color:#888;margin-top:3px;">$140 Budget · Month 1 · Oakland Built</div>
+  </div>
+  <div class="xp-bar-wrap">
+    <div class="xp-label" id="xp-label">XP: 0 / 100</div>
+    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+    <div class="level-badge" id="level-badge">LVL 1 — Rookie</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('roadmap')">🗺️ Roadmap</div>
+  <div class="tab" onclick="showPage('products')">🛒 Products</div>
+  <div class="tab" onclick="showPage('strategy')">🧠 Strategy</div>
+  <div class="tab" onclick="showPage('kpi')">📊 KPIs</div>
+  <div class="tab" onclick="showPage('content')">🎬 Content Plan</div>
+</div>
+
+<div class="main">
+
+  <!-- ROADMAP PAGE -->
+  <div class="page active" id="page-roadmap">
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title">Budget Left</div>
+        <div class="card-value" id="budget-left">$140</div>
+        <div class="card-sub">Starting capital</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tasks Done</div>
+        <div class="card-value" id="tasks-done">0</div>
+        <div class="card-sub">of <span id="tasks-total">0</span> total</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Phase</div>
+        <div class="card-value" id="current-phase">1</div>
+        <div class="card-sub">Foundation</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Days In</div>
+        <div class="card-value" id="days-in">0</div>
+        <div class="card-sub">of 30 day sprint</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div>
+        <div class="section-title">30-Day Game Plan</div>
+        <div class="section-sub">Click a phase to expand tasks · Check off as you go</div>
+      </div>
+    </div>
+
+    <div class="roadmap" id="roadmap"></div>
+  </div>
+
+  <!-- PRODUCTS PAGE -->
+  <div class="page" id="page-products">
+    <div class="alert alert-gold">⚡ <div><strong>Paris's Move:</strong> Start with TikTok Shop Affiliate (zero cost) → test one physical product with ~$80 → scale what converts. Never go all-in on bulk until you have proof.</div></div>
+
+    <div class="section-header" style="margin-top:8px;">
+      <div class="section-title">Top Products for Your Lane</div>
+      <div class="section-sub">Researched · TikTok-proven · Under $50 to source</div>
+    </div>
+
+    <div class="grid-3" id="products-grid"></div>
+
+    <div class="alert alert-green">🎯 <div><strong>Recommendation for $140:</strong> Spend $0 first 2 weeks on TikTok Shop Affiliate (free). Use $80 on Toe Spacers or Portable Blender to test. Keep $60 reserve. If first product hits → reinvest profits only.</div></div>
+  </div>
+
+  <!-- STRATEGY PAGE -->
+  <div class="page" id="page-strategy">
+    <div class="lane-card">
+      <h2>🦁 Your Unique Lane — "Tech for the Culture"</h2>
+      <div class="lane-item"><div class="lane-icon">🎓</div><div><strong>Identity:</strong> Innovation Educator at HGP by day, teaching Oakland youth AI. Tech product curator by night. Nobody else has this exact story — it's your unfair advantage.</div></div>
+      <div class="lane-item"><div class="lane-icon">🎯</div><div><strong>Niche:</strong> AI gadgets + tech accessories + wellness tech for Black culture & youth. This space is wide open.</div></div>
+      <div class="lane-item"><div class="lane-icon">📱</div><div><strong>Hook formula:</strong> "I teach AI to kids in Oakland — here's the tech they need to know about." Instant credibility + curiosity.</div></div>
+      <div class="lane-item"><div class="lane-icon">🔥</div><div><strong>Content angle:</strong> "Hidden Genius approved" or "Oakland-tested" — positions every product review as curated, not random.</div></div>
+      <div class="lane-item"><div class="lane-icon">💰</div><div><strong>Monetization stack:</strong> TikTok Shop Affiliate → Own Products → Brand Deals → Digital Products (your AI curriculum).</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">Pages Strategy</div>
+        <div class="lane-item"><div class="lane-icon">📱</div><div><strong>TikTok Main (@paris):</strong> Keep it. Post product content here — don't split your audience. Blend it with your existing vibe.</div></div>
+        <div class="lane-item"><div class="lane-icon">📘</div><div><strong>Facebook:</strong> Create NEW page "Tech for the Culture by Paris" — target 25-45 year olds who buy.</div></div>
+        <div class="lane-item"><div class="lane-icon">📸</div><div><strong>Instagram:</strong> Create NEW business page — aesthetic product shots, reels. Different from TikTok.</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">Scaling Path</div>
+        <div class="lane-item"><div class="lane-icon">1️⃣</div><div><strong>Week 1-2:</strong> TikTok Affiliate — earn commissions on other brands' products with zero risk.</div></div>
+        <div class="lane-item"><div class="lane-icon">2️⃣</div><div><strong>Week 3:</strong> Source ONE winning product. Test with $80. Post 5 videos.</div></div>
+        <div class="lane-item"><div class="lane-icon">3️⃣</div><div><strong>Week 4:</strong> If product converts → reinvest 80% of profits. If not → pivot to next product.</div></div>
+        <div class="lane-item"><div class="lane-icon">🚀</div><div><strong>Month 2+:</strong> Add Shopify store. Run Facebook ads on proven products only.</div></div>
+      </div>
+    </div>
+
+    <div class="alert alert-blue">💡 <div><strong>Competitor Separation:</strong> Most sellers have no story. You have HGP, Charity Driver, London tech slam, Oakland roots. Put that in every bio, every video description. That's not just marketing — that's a movement.</div></div>
+  </div>
+
+  <!-- KPI PAGE -->
+  <div class="page" id="page-kpi">
+    <div class="section-header">
+      <div class="section-title">Track Your Numbers</div>
+      <div class="section-sub">Update weekly — I'll flag what's trending up or down</div>
+    </div>
+
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <button class="save-btn" onclick="saveKPIs()">💾 Save This Week's Numbers</button>
+
+    <div style="margin-top: 24px;">
+      <div class="section-header">
+        <div class="section-title">History Log</div>
+      </div>
+      <div class="card" style="overflow-x:auto;">
+        <table class="log-table" id="kpi-log-table">
+          <thead><tr id="kpi-log-headers"></tr></thead>
+          <tbody id="kpi-log-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT PLAN PAGE -->
+  <div class="page" id="page-content">
+    <div class="section-header">
+      <div class="section-title">Weekly Content Calendar</div>
+      <div class="section-sub">Based on your comfort with both talking-head and unboxing</div>
+    </div>
+
+    <div id="content-weeks"></div>
+
+    <div class="alert alert-gold" style="margin-top:16px;">🎬 <div><strong>Golden Rule:</strong> First 3 seconds = hook. Say "I teach AI to kids in Oakland and this product blew my mind" — you'll stop every scroll. Always end with "Link in bio / TikTok Shop."</div></div>
+  </div>
+
+</div>
+
+<script>
+// =================== DATA ===================
+const ROADMAP_DATA = [
+  {
+    phase: 1,
+    title: "Foundation (Days 1-3)",
+    desc: "Set up all accounts, zero cost",
+    status: "active",
+    tasks: [
+      { text: "Sign up for TikTok Shop Affiliate (free)", tag: "free" },
+      { text: "Create Facebook Business Page 'Tech for the Culture'", tag: "free" },
+      { text: "Create Instagram Business Account", tag: "free" },
+      { text: "Update all bios with HGP story + Oakland angle", tag: "free" },
+      { text: "Download CapCut for video editing (free)", tag: "free" },
+      { text: "Set up Desktop/Digital Marketing folder (done ✅)", tag: "free" },
+    ]
+  },
+  {
+    phase: 2,
+    title: "TikTok Affiliate Launch (Days 4-10)",
+    desc: "Earn commissions with zero inventory",
+    status: "locked",
+    tasks: [
+      { text: "Browse TikTok Shop → Find 3 products in tech/wellness", tag: "free" },
+      { text: "Film 3 affiliate review videos (unboxing style)", tag: "content" },
+      { text: "Post 1 video/day for 7 days — track views", tag: "content" },
+      { text: "Engage with every comment in first hour of posting", tag: "free" },
+      { text: "Screenshot first affiliate click or sale", tag: "free" },
+    ]
+  },
+  {
+    phase: 3,
+    title: "First Product Test (Days 11-20)",
+    desc: "Spend ~$80 on one proven product",
+    status: "locked",
+    tasks: [
+      { text: "Choose winning product (toe spacers or portable blender)", tag: "paid" },
+      { text: "Order 5-10 units from Amazon/Alibaba (~$60-80)", tag: "paid" },
+      { text: "Film unboxing + demo video day product arrives", tag: "content" },
+      { text: "Post 5 videos about this product over 7 days", tag: "content" },
+      { text: "Set up TikTok Shop listing for your product", tag: "free" },
+      { text: "Track: views, clicks, conversions per video", tag: "free" },
+    ]
+  },
+  {
+    phase: 4,
+    title: "Scale or Pivot (Days 21-30)",
+    desc: "Double down on what works",
+    status: "locked",
+    tasks: [
+      { text: "Review KPI log — which video got most sales?", tag: "free" },
+      { text: "If product converts: reorder 20-30 units from profits", tag: "paid" },
+      { text: "If product flops: choose new product, repeat phase 3", tag: "free" },
+      { text: "Launch Facebook page with 3 posts (repurpose TikTok)", tag: "free" },
+      { text: "Post 3 Instagram reels (same content, different caption)", tag: "content" },
+      { text: "Set Month 2 budget from profits only", tag: "free" },
+    ]
+  }
+];
+
+const PRODUCTS_DATA = [
+  { name: "Toe Spacers", rank: "#1 Pick", cost: "$8-15", profit: "$15-25", tiktok: "2.5B views", ease: 95, reason: "Massive TikTok proof, tiny, easy to ship, high margin" },
+  { name: "Portable Blender", rank: "#2 Pick", cost: "$12-20", profit: "$20-35", tiktok: "800M views", ease: 88, reason: "Health trend, visual product, perfect unboxing content" },
+  { name: "PDRN Serum", rank: "#3 Pick", cost: "$10-18", profit: "$25-40", tiktok: "500M+ views", ease: 82, reason: "99X growth, salmon DNA angle is viral, high AOV" },
+  { name: "LED Strip Lights", rank: "#4 Pick", cost: "$8-14", profit: "$15-28", tiktok: "1.2B views", ease: 90, reason: "Setup reveal content is consistently viral" },
+  { name: "Mini Projector", rank: "Tech Lane", cost: "$35-60", profit: "$40-80", tiktok: "300M views", ease: 75, reason: "Fits your tech educator brand perfectly" },
+  { name: "Mushroom Chocolate", rank: "#5 Pick", cost: "$15-25", profit: "$20-35", tiktok: "200M views", ease: 78, reason: "Wellness trend, 156% growth, taste test content" },
+];
+
+const KPI_FIELDS = [
+  { key: "tiktok_views", label: "TikTok Views (Week)", prefix: "" },
+  { key: "tiktok_followers", label: "TikTok Followers", prefix: "" },
+  { key: "affiliate_clicks", label: "Affiliate Clicks", prefix: "" },
+  { key: "affiliate_sales", label: "Affiliate Sales ($)", prefix: "$" },
+  { key: "product_sales", label: "Product Sales ($)", prefix: "$" },
+  { key: "total_revenue", label: "Total Revenue ($)", prefix: "$" },
+  { key: "videos_posted", label: "Videos Posted", prefix: "" },
+  { key: "ig_followers", label: "Instagram Followers", prefix: "" },
+];
+
+const CONTENT_WEEKS = [
+  {
+    week: "Week 1 — Affiliate Only",
+    budget: "$0",
+    days: [
+      { day: "Mon", type: "Talking Head", title: "\"I teach AI to Oakland kids — here's the tech we actually use\"", product: "TikTok Shop Affiliate" },
+      { day: "Tue", type: "Unboxing", title: "Unbox trending product — first reaction, no script", product: "Affiliate Product #1" },
+      { day: "Wed", type: "REST", title: "Engage comments, reply to everyone", product: "Community day" },
+      { day: "Thu", type: "Talking Head", title: "\"3 products going viral right now (and why)\"", product: "TikTok Shop Affiliate" },
+      { day: "Fri", type: "Demo", title: "Show the product actually working — before/after", product: "Affiliate Product #2" },
+      { day: "Sat", type: "Storytime", title: "\"From HGP student to selling products online — my story\"", product: "Brand building" },
+      { day: "Sun", type: "REST", title: "Review analytics, plan next week", product: "Strategy day" },
+    ]
+  },
+  {
+    week: "Week 2 — Affiliate + Research",
+    budget: "$0",
+    days: [
+      { day: "Mon", type: "Unboxing", title: "\"I ordered 5 viral products — here's which ones are REAL\"", product: "Affiliate multi-product" },
+      { day: "Tue", type: "Talking Head", title: "\"Oakland tech educator product review (no cap)\"", product: "Affiliate Product #3" },
+      { day: "Wed", type: "REST", title: "Order your first physical product", product: "Business day" },
+      { day: "Thu", type: "Behind Scenes", title: "\"I'm starting a product business with $140 — follow along\"", product: "Series content" },
+      { day: "Fri", type: "Demo", title: "Product demo — use the HGP classroom as backdrop", product: "Affiliate Product #2" },
+      { day: "Sat", type: "Collab", title: "Tag HGP in a tech-for-youth angle post", product: "Brand building" },
+      { day: "Sun", type: "REST", title: "Review analytics, prep for product arrival", product: "Strategy day" },
+    ]
+  },
+  {
+    week: "Week 3 — First Product Launch",
+    budget: "~$80",
+    days: [
+      { day: "Mon", type: "Unboxing", title: "\"My product JUST arrived — unboxing live\"", product: "YOUR Product #1" },
+      { day: "Tue", type: "Demo", title: "Show product in use — real reaction, no filter", product: "YOUR Product #1" },
+      { day: "Wed", type: "Talking Head", title: "\"Here's why I chose this product to sell first\"", product: "YOUR Product #1" },
+      { day: "Thu", type: "Social Proof", title: "\"First customer bought it — here's their reaction\"", product: "YOUR Product #1" },
+      { day: "Fri", type: "Education", title: "\"5 ways to use [product] you didn't know about\"", product: "YOUR Product #1" },
+      { day: "Sat", type: "Story", title: "Week in review — sales, lessons, what's next", product: "Series content" },
+      { day: "Sun", type: "REST", title: "Analyze: which video drove sales?", product: "Strategy day" },
+    ]
+  },
+  {
+    week: "Week 4 — Scale Up",
+    budget: "Profits only",
+    days: [
+      { day: "Mon", type: "Milestone", title: "\"Month 1 results — honest breakdown\"", product: "Brand building" },
+      { day: "Tue", type: "Unboxing", title: "Launch product #2 OR restock + bigger unboxing", product: "Scale product" },
+      { day: "Wed", type: "Collab", title: "Tag a Bay Area creator or business", product: "Network" },
+      { day: "Thu", type: "Demo", title: "Comparison video: your product vs competitor", product: "YOUR Product" },
+      { day: "Fri", type: "Talking Head", title: "\"Month 2 plan — going bigger from Oakland\"", product: "Series content" },
+      { day: "Sat", type: "Live", title: "TikTok LIVE — sell product live, answer questions", product: "Direct sales" },
+      { day: "Sun", type: "REST", title: "Set Month 2 goals, reinvest profits", product: "Strategy day" },
+    ]
+  }
+];
+
+// =================== STATE ===================
+let state = JSON.parse(localStorage.getItem('paris_empire') || '{}');
+if (!state.tasks) state.tasks = {};
+if (!state.kpi_log) state.kpi_log = [];
+if (!state.start_date) { state.start_date = new Date().toISOString(); }
+
+function saveState() { localStorage.setItem('paris_empire', JSON.stringify(state)); }
+
+// =================== XP ===================
+function updateXP() {
+  const total = ROADMAP_DATA.reduce((a,p) => a + p.tasks.length, 0);
+  const done = Object.values(state.tasks).filter(Boolean).length;
+  const pct = total > 0 ? (done / total) * 100 : 0;
+  const xp = Math.round(pct);
+  document.getElementById('xp-fill').style.width = pct + '%';
+  document.getElementById('xp-label').textContent = `XP: ${done} / ${total}`;
+  let level = 'Rookie';
+  if (pct >= 25) level = 'Hustler';
+  if (pct >= 50) level = 'Seller';
+  if (pct >= 75) level = 'Boss';
+  if (pct >= 100) level = '🔥 Empire';
+  document.getElementById('level-badge').textContent = `LVL ${Math.floor(pct/25)+1} — ${level}`;
+  document.getElementById('tasks-done').textContent = done;
+  document.getElementById('tasks-total').textContent = total;
+
+  const start = new Date(state.start_date);
+  const now = new Date();
+  const days = Math.floor((now - start) / (1000*60*60*24));
+  document.getElementById('days-in').textContent = days;
+}
+
+// =================== ROADMAP ===================
+function renderRoadmap() {
+  const container = document.getElementById('roadmap');
+  container.innerHTML = '';
+  ROADMAP_DATA.forEach((phase, pi) => {
+    const doneTasks = phase.tasks.filter((t,ti) => state.tasks[`${pi}-${ti}`]).length;
+    const allDone = doneTasks === phase.tasks.length;
+    const div = document.createElement('div');
+    div.className = `phase ${phase.status === 'active' ? 'active-phase' : ''} ${allDone ? 'done' : ''}`;
+    div.id = `phase-${pi}`;
+    const badgeClass = allDone ? 'badge-done' : phase.status === 'active' ? 'badge-active' : 'badge-locked';
+    const badgeText = allDone ? '✅ Complete' : phase.status === 'active' ? '▶ In Progress' : '🔒 Locked';
+    const numClass = allDone ? 'done' : phase.status === 'active' ? 'active' : 'locked';
+    div.innerHTML = `
+      <div class="phase-header" onclick="togglePhase(${pi})">
+        <div class="phase-num ${numClass}">${allDone ? '✓' : pi+1}</div>
+        <div class="phase-info">
+          <h3>${phase.title}</h3>
+          <p>${phase.desc} · ${doneTasks}/${phase.tasks.length} tasks</p>
+        </div>
+        <div class="phase-badge ${badgeClass}">${badgeText}</div>
+      </div>
+      <div class="phase-tasks">
+        ${phase.tasks.map((t,ti) => {
+          const key = `${pi}-${ti}`;
+          const checked = state.tasks[key];
+          return `<div class="task-item">
+            <div class="task-check ${checked ? 'checked' : ''}" onclick="toggleTask('${key}', ${pi})"></div>
+            <div class="task-text ${checked ? 'done' : ''}">${t.text}</div>
+            <div class="task-tag tag-${t.tag}">${t.tag}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    if (phase.status === 'active' || pi === 0) div.classList.add('open');
+    container.appendChild(div);
+  });
+}
+
+function togglePhase(pi) {
+  const el = document.getElementById(`phase-${pi}`);
+  el.classList.toggle('open');
+}
+
+function toggleTask(key, phaseIdx) {
+  state.tasks[key] = !state.tasks[key];
+  saveState();
+  renderRoadmap();
+  updateXP();
+}
+
+// =================== PRODUCTS ===================
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = PRODUCTS_DATA.map(p => `
+    <div class="product-card">
+      <h3>${p.name} <span class="product-rank">${p.rank}</span></h3>
+      <div class="product-stat"><span>Source cost</span><span>${p.cost}</span></div>
+      <div class="product-stat"><span>Est. sell price profit</span><span style="color:var(--green)">${p.profit}</span></div>
+      <div class="product-stat"><span>TikTok views</span><span style="color:var(--gold)">${p.tiktok}</span></div>
+      <div class="product-bar"><div class="product-bar-fill" style="width:${p.ease}%"></div></div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:8px;">${p.reason}</div>
+    </div>`).join('');
+}
+
+// =================== KPIs ===================
+function renderKPIs() {
+  const grid = document.getElementById('kpi-grid');
+  const prev = state.kpi_log.length > 0 ? state.kpi_log[state.kpi_log.length - 1] : null;
+  grid.innerHTML = KPI_FIELDS.map(f => {
+    const prevVal = prev ? (prev[f.key] || 0) : null;
+    const delta = prevVal !== null ? ((state.kpi_current || {})[f.key] || 0) - prevVal : null;
+    const deltaHtml = delta !== null && delta !== 0 ? `<div class="kpi-delta ${delta > 0 ? 'delta-up' : 'delta-down'}">${delta > 0 ? '▲' : '▼'} ${Math.abs(delta)}</div>` : '';
+    return `<div class="kpi-card">
+      <div class="kpi-label">${f.label}</div>
+      <div class="kpi-input-wrap">
+        <span style="color:var(--muted);font-size:1rem;">${f.prefix}</span>
+        <input class="kpi-input" type="number" id="kpi-${f.key}" placeholder="0" value="${(state.kpi_current || {})[f.key] || ''}">
+      </div>
+      ${prevVal !== null ? `<div class="kpi-prev">Last: ${f.prefix}${prevVal}</div>` : ''}
+      ${deltaHtml}
+    </div>`;
+  }).join('');
+
+  // Log table
+  const headers = document.getElementById('kpi-log-headers');
+  headers.innerHTML = '<th>Date</th>' + KPI_FIELDS.map(f => `<th>${f.label}</th>`).join('');
+  const body = document.getElementById('kpi-log-body');
+  body.innerHTML = state.kpi_log.slice().reverse().map(row =>
+    `<tr><td>${row.date}</td>${KPI_FIELDS.map(f => `<td>${row[f.key] || 0}</td>`).join('')}</tr>`
+  ).join('') || `<tr><td colspan="${KPI_FIELDS.length+1}" style="color:var(--muted);text-align:center;padding:20px;">No logs yet — save your first week's numbers above!</td></tr>`;
+}
+
+function saveKPIs() {
+  if (!state.kpi_current) state.kpi_current = {};
+  KPI_FIELDS.forEach(f => {
+    const val = document.getElementById(`kpi-${f.key}`).value;
+    state.kpi_current[f.key] = val ? parseFloat(val) : 0;
+  });
+  const row = { date: new Date().toLocaleDateString(), ...state.kpi_current };
+  state.kpi_log.push(row);
+  saveState();
+  renderKPIs();
+  alert('✅ Numbers saved! Keep grinding Paris.');
+}
+
+// =================== CONTENT ===================
+function renderContent() {
+  const container = document.getElementById('content-weeks');
+  const typeColors = { 'Talking Head': '#9c27b0', 'Unboxing': '#00c853', 'Demo': '#2979ff', 'REST': '#333', 'Story': '#ff9800', 'Storytime': '#ff9800', 'Behind Scenes': '#607d8b', 'Collab': '#e91e63', 'Social Proof': '#00bcd4', 'Education': '#8bc34a', 'Milestone': '#ffd600', 'Live': '#f44336' };
+  container.innerHTML = CONTENT_WEEKS.map((week, wi) => `
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div class="section-title" style="font-size:0.9rem;">${week.week}</div>
+        <div style="font-size:0.75rem;color:var(--green);font-weight:700;">Budget: ${week.budget}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;">
+        ${week.days.map(d => {
+          const color = typeColors[d.type] || '#888';
+          const isRest = d.type === 'REST';
+          return `<div style="background:${isRest ? '#0d0d0d' : 'var(--card)'};border:1px solid ${isRest ? 'var(--border)' : color+'44'};border-radius:8px;padding:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:0.7rem;font-weight:800;color:var(--muted);">${d.day}</span>
+              <span style="font-size:0.62rem;background:${color}22;color:${color};padding:2px 5px;border-radius:8px;font-weight:700;">${d.type}</span>
+            </div>
+            <div style="font-size:0.72rem;line-height:1.3;color:${isRest ? 'var(--muted)' : 'var(--text)'};">${d.title}</div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:6px;">${d.product}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// =================== TABS ===================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'kpi') renderKPIs();
+}
+
+// =================== INIT ===================
+renderRoadmap();
+renderProducts();
+renderContent();
+updateXP();
+</script>
+</body>
+</html>
